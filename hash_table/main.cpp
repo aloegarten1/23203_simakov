@@ -1,7 +1,10 @@
 #include <iostream>
-#include "hashtable.h"
+#include "lib/hash_table.h"
+#include <gtest/gtest.h>
+// #include <gmock/gmock.h>
+int main(int argc, char **argv)
+{
+  ::testing::InitGoogleTest(&argc, argv);
 
-int main(void) {
-    std::cout << "HashTable." << std::endl;
-    return 0;
+  return RUN_ALL_TESTS();
 }
