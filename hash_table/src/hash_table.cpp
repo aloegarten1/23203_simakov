@@ -1,28 +1,29 @@
-#include "../lib/hash_table.h"
+#include "../lib/hash_table.hpp"
 
 #include <iostream>
 
-HashTable::HashTable() : 
+namespace {
+    static constexpr size_t INITIAL_CAPACITY = 2;
+    static constexpr size_t HASH = 9;
+    static constexpr size_t EXPAND_COEFF = 2;
+    static constexpr float MAX_LOAD_FACTOR = 2;
+}
+
+template<class Key, class Value> HashTable<Key, Value>::HashTable() : 
     __storage(std::make_unique<std::unique_ptr<Node>[]>(INITIAL_CAPACITY)),
     __capacity(INITIAL_CAPACITY),
     __size(0) 
 { }
 
-HashTable::HashTable(const HashTable& ht) :
+template<class Key, class Value> HashTable<Key, Value>::HashTable(const HashTable<Key,Value>& ht) :
     __storage(std::make_unique<std::unique_ptr<Node>[]>(ht.__capacity)),
     __capacity(ht.__capacity),
     __size(0)
 {
-    for (size_t i = 0; i < this->__capacity; ++i) {
-        Node* curr = ht.__storage[i].get();
-        while (curr) {
-            _insertNode(curr->key, curr->value);
-            curr = curr->next.get();
-        }
-    }
+    _copy(ht);
 }
 
-HashTable::HashTable(HashTable &&ht):
+template<class Key, class Value> HashTable<Key, Value>::HashTable(HashTable<Key,Value>&& ht) noexcept:
     __storage(std::move(ht.__storage)),
     __capacity(ht.__capacity),
     __size(ht.__size)
@@ -30,22 +31,20 @@ HashTable::HashTable(HashTable &&ht):
     // Probably we can use a default constructor instead of this three lines.
     ht.__capacity = INITIAL_CAPACITY;
     ht.__size = 0;
-    ht.__storage = std::make_unique<std::unique_ptr<Node>[]>(ht.__capacity);
+    ht.__storage = std::make_unique<std::unique_ptr<Node>[]>(INITIAL_CAPACITY);
 }
 
-HashTable::~HashTable() {
-    clear();
-}
+template<class Key, class Value> HashTable<Key, Value>::~HashTable() = default;
 
-HashTable &HashTable::operator=(const HashTable &b) {
+template<class Key, class Value> HashTable<Key, Value> & HashTable<Key, Value>::operator=(const HashTable<Key,Value> &b) {
     _copy(b);
     return *this;
 }
 
-HashTable& HashTable::operator=(HashTable&& b) {
-    this->__capacity = b.__capacity;
-    this->__size = b.__size;
-    this->__storage = std::move(b.__storage);
+template<class Key, class Value> HashTable<Key,Value>  &  HashTable<Key, Value>::operator=(HashTable<Key,Value>&& b) {
+    __capacity = b.__capacity;
+    __size = b.__size;
+    __storage = std::move(b.__storage);
 
     b.__capacity = INITIAL_CAPACITY;
     b.__size = 0;
@@ -54,48 +53,52 @@ HashTable& HashTable::operator=(HashTable&& b) {
     return *this;
 }
 
-bool HashTable::empty() const noexcept {
-    return this->__size == 0;
+template<class Key, class Value> bool HashTable<Key, Value>::empty() const noexcept {
+    return __size == 0;
 }
 
-std::size_t HashTable::size() const noexcept {
-    return this->__size;
+template<class Key, class Value> std::size_t HashTable<Key, Value>::size() const noexcept {
+    return __size;
 }
 
-bool HashTable::insert(const Key& k, const Value& v) {
-    if ((double) this->__size >= MAX_LOAD_FACTOR * (double) this->__capacity - 1) {
+template<class Key, class Value> bool HashTable<Key, Value>::insert(const Key& k, const Value& v) {
+   //?????????????????????????//
+    if ((double) __size >= MAX_LOAD_FACTOR * (double) __capacity - 1) {
         _resizeStorage();
     }
 
     return _insertNode(k, v);
 }
 
-void HashTable::clear() {
-    for (std::size_t i = 0; i < this->__capacity; i++) {
-        if (this->__storage[i]) {
-            while (this->__storage[i]) {
-                this->__storage[i] = std::move(this->__storage[i]->next);
-                this->__size--;
+template<class Key, class Value> void HashTable<Key, Value>::clear() {
+    for (std::size_t i = 0; i < __capacity; i++) {
+        if (__storage[i]) {
+            while (__storage[i]) {
+                //???????????????????????
+                //???????????????????????
+                //????????????????????????
+                __storage[i] = std::move(__storage[i]->next);
+                __size--;
             }
         }
     }
 }
 
-bool HashTable::erase(const Key& k) {
+template<class Key, class Value> bool HashTable<Key, Value>::erase(const Key& k) {
     std::size_t hash = _hash(k);
-    Node* curr = this->__storage[hash].get();
+    Node* curr = __storage[hash].get();
     if (!curr) { return false; }
 
     if (curr->key == k) {
-        this->__storage[hash] = std::move(this->__storage[hash]->next);
-        this->__size--;
+        __storage[hash] = std::move(__storage[hash]->next);
+        __size--;
         return true;
     }
 
     while (curr->next) {
         if (curr->key == k) {
             curr->next = std::move(curr->next->next);
-            this->__size--;
+            __size--;
             return true;
         }
     }
@@ -103,12 +106,12 @@ bool HashTable::erase(const Key& k) {
     return false;
 }
 
-bool HashTable::contains(const Key &k) const {
+template<class Key, class Value> bool HashTable<Key, Value>::contains(const Key &k) const {
     size_t hash = _hash(k);
-    if (!this->__storage[hash]) {
+    if (!__storage[hash]) {
         return false;
     }
-    Node *curr = this->__storage[hash].get();
+    Node *curr = __storage[hash].get();
     while (curr) {
         if (curr->key == k) {
             return true;
@@ -118,10 +121,9 @@ bool HashTable::contains(const Key &k) const {
     return false;
 }
 
-
-Value &HashTable::at(const Key &k) {
+template<class Key, class Value> Value& HashTable<Key, Value>::at(const Key &k) {
     const size_t hash = _hash(k);
-    Node *curr = this->__storage[hash].get();
+    Node *curr = __storage[hash].get();
     while (curr) {
         if (curr->key == k) {
             return curr->value;
@@ -131,88 +133,85 @@ Value &HashTable::at(const Key &k) {
     throw std::invalid_argument("Key was not found.");
 }
 
-const Value &HashTable::at(const Key &k) const {
+template<class Key, class Value> const Value& HashTable<Key, Value>::at(const Key &k) const {
     return const_cast<HashTable *>(this)->at(k);
 }
 
-void HashTable::swap(HashTable &b) {
-    std::swap(this->__capacity, b.__capacity);
-    std::swap(this->__size, b.__size);
-    std::swap(this->__storage, b.__storage);
+template<class Key, class Value> void HashTable<Key, Value>::swap(HashTable<Key,Value> &b) {
+    std::swap(__capacity, b.__capacity);
+    std::swap(__size, b.__size);
+    std::swap(__storage, b.__storage);
 }
 
-Value& HashTable::operator[](const Key& k) {
+template<class Key, class Value> Value& HashTable<Key, Value>::operator[](const Key& k) {
     const size_t hash = _hash(k);
-    if (!this->__storage[hash]) {
-        this->__storage[hash] = std::make_unique<Node>(k, Value());
-        this->__size++;
+    if (!__storage[hash]) {
+        __storage[hash] = std::make_unique<Node>(k, Value());
+        __size++;
 
-        return this->__storage[hash]->value;
+        return __storage[hash]->value;
     }
 
-    Node* curr = this->__storage[hash].get();
+    Node* curr = __storage[hash].get();
     while (curr) {
         if (curr->key == k) {
             return curr->value;
         }
         curr = curr->next.get();
     }
-    this->__storage[hash]->next = std::make_unique<Node>(k, Value());
-    this->__size++;
+    __storage[hash]->next = std::make_unique<Node>(k, Value());
+    __size++;
     
-    return this->__storage[hash]->next->value;
+    return __storage[hash]->next->value;
 }
 
-bool operator==(const HashTable &a, const HashTable &b) {
-    if (a.__capacity != b.__capacity || a.__size != b.__size ) {
-        return false;
-    }
+// bool operator==(const HashTable<Key,Value> &a, const HashTable<Key,Value> &b) {
+//     if (a.__capacity != b.__capacity || a.__size != b.__size ) {
+//         return false;
+//     }
 
-    for (std::size_t i = 0; i < a.__capacity; ++i) {
-        HashTable::Node *curr_a = a.__storage[i].get();
-        HashTable::Node *curr_b = b.__storage[i].get();
-        while (curr_a && curr_b) {
-            bool isKeyEq = curr_a->key != curr_b->key;
-            /**
-             * According to this silly equal checks,
-             * @todo: operators "==" and "!=" for value
-             */
-            bool isWeightEq = curr_a->value.weight != curr_b->value.weight;
-            bool isAgeEq = curr_a->value.age != curr_b->value.age;
+//     for (std::size_t i = 0; i < a.__capacity; ++i) {
+//         template<class Key, class Value> HashTable<Key, Value>::Node *curr_a = a.__storage[i].get();
+//         template<class Key, class Value> HashTable<Key, Value>::Node *curr_b = b.__storage[i].get();
+//         while (curr_a && curr_b) {
+//             /**
+//              * According to this silly equal checks,
+//              * @todo: operators "==" and "!=" for value
+//              */
+//             bool isKeyEq = curr_a->key != curr_b->key;
+//             bool isWeightEq = curr_a->value.weight != curr_b->value.weight;
+//             bool isAgeEq = curr_a->value.age != curr_b->value.age;
             
-            if (isKeyEq || isWeightEq || isAgeEq) { return false; }
+//             if (isKeyEq || isWeightEq || isAgeEq) { return false; }
             
-            curr_a = curr_a->next.get();
-            curr_b = curr_b->next.get();
-        }
-    }
+//             curr_a = curr_a->next.get();
+//             curr_b = curr_b->next.get();
+//         }
+//     }
 
-    return true;
-}
+//     return true;
+// }
 
-bool operator!=(const HashTable &a, const HashTable &b) {
-    return !(a == b);
-}
+// bool operator!=(const HashTable<Key,Value> &a, const HashTable<Key,Value> &b) {
+//     return !(a == b);
+// }
 
-std::size_t HashTable::_hash(const Key &key) const {
+template<class Key, class Value> std::size_t HashTable<Key, Value>::_hash(const Key &key) const {
     size_t hash = 0;
     for (char i: key) {
         int x = (int) (i - 'a' + 1);
-        hash = (hash * HASH + x) % this->__capacity;
+        hash = (hash * HASH + x) % __capacity;
     }
     
     return hash;
 }
 
-void HashTable::_resizeStorage() {
-    /**
-     * I hope we can use "auto" instead of this long bullshit, 
-     * but im not really sure..
-     */
-    std::unique_ptr<std::unique_ptr<HashTable::Node>[]> oldStorage = std::move(this->__storage);
-    this->__storage = std::make_unique<std::unique_ptr<Node>[]>(this->__capacity * 2);
+template<class Key, class Value> void HashTable<Key, Value>::_resizeStorage() {
+   //???????????????
+    std::unique_ptr<std::unique_ptr<HashTable<Key, Value>::Node>[]> oldStorage = std::move(__storage);
+    __storage = std::make_unique<std::unique_ptr<Node>[]>(__capacity * 2);
 
-    for (std::size_t i = 0; i < this->__capacity; ++i) {
+    for (std::size_t i = 0; i < __capacity; ++i) {
         if (oldStorage[i]) {
             while (oldStorage[i]->next) {
                 _insertNode(oldStorage[i]->next->key, oldStorage[i]->next->value);
@@ -222,35 +221,35 @@ void HashTable::_resizeStorage() {
         }
         oldStorage[i].reset();
     }
-    this->__capacity *= EXPAND_COEFF;
+    __capacity *= EXPAND_COEFF;
 }
 
-bool HashTable::_insertNode(const Key &k, const Value &v) {
+template<class Key, class Value> bool HashTable<Key, Value>::_insertNode(const Key &k, const Value &v) {
     const std::size_t hash = _hash(k);
-    Node *curr = this->__storage[hash].get();
+    Node *curr = __storage[hash].get();
 
     while (curr) {
         if (curr->key == k) { return false; }
         if (!curr->next) {
             curr->next = std::make_unique<Node>(k, v);
-            this->__size++;
+            __size++;
 
             return true;
         }
         curr = curr->next.get();
     }
 
-    this->__storage[hash] = std::make_unique<Node>(k, v);
-    this->__size++;
+    __storage[hash] = std::make_unique<Node>(k, v);
+    __size++;
     
     return true;
 }
 
-void HashTable::_copy(const HashTable &b) {
-    this->__storage = std::make_unique<std::unique_ptr<Node>[]>(b.__capacity);
-    this->__size = 0;
-    this->__capacity = b.__capacity;
-    for (std::size_t i = 0; i < this->__capacity; i++) {
+template<class Key, class Value> void HashTable<Key, Value>::_copy(const HashTable<Key,Value> &b) {
+    __storage = std::make_unique<std::unique_ptr<Node>[]>(b.__capacity);
+    __size = 0;
+    __capacity = b.__capacity;
+    for (std::size_t i = 0; i < __capacity; i++) {
         Node *curr = b.__storage[i].get();
         while (curr) {
             _insertNode(curr->key, curr->value);
@@ -258,6 +257,8 @@ void HashTable::_copy(const HashTable &b) {
         }
     }
 }
+
+
 
 /**
  * aloegarten..

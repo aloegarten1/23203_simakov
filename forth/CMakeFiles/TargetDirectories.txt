@@ -1,0 +1,3 @@
+/home/stepan/projects/cpp/23203_simakov/forth/CMakeFiles/forth.dir
+/home/stepan/projects/cpp/23203_simakov/forth/CMakeFiles/edit_cache.dir
+/home/stepan/projects/cpp/23203_simakov/forth/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/forth.dir/io/repl.cpp.o CMakeFiles/forth.dir/interpreter/forth.cpp.o CMakeFiles/forth.dir/interpreter/internals/executionContext.cpp.o CMakeFiles/forth.dir/interpreter/internals/stack/stack.cpp.o CMakeFiles/forth.dir/interpreter/basics/commands/commands.cpp.o -o forth 

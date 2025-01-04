@@ -1,21 +1,10 @@
-#pragma once 
+#ifndef _HASH_TABLE_H
+#define _HASH_TABLE_H
 
 #include <memory>
 #include <string>
 
-/**
- * @todo (aloegarten1): create a template key and value
- */
-typedef std::string Key;
-
-struct Value {
-    Value() : age(0), weight(0) {}
-    Value(unsigned a, unsigned w) : age(a), weight(w) {}
-
-    unsigned age;
-    unsigned weight;
-};
-
+template<class Key, class Value>
 class HashTable {
 
 public:
@@ -33,7 +22,7 @@ public:
     /**
      * Moves a table from argument to a current table.
      */
-    HashTable(HashTable&& ht);
+    HashTable(HashTable&& ht) noexcept;
     
     /**
      * Erases all elements from hashtable,
@@ -112,13 +101,13 @@ public:
      * @return true, if hash tables contain same objects, 
      * else - false
      */
-    friend bool operator==(const HashTable& a, const HashTable& b);
+    // friend bool operator==(const HashTable& a, const HashTable& b);
 
-    /**
-     * @return true, if hash tables contain different objects, 
-     * else - false
-     */
-    friend bool operator!=(const HashTable& a, const HashTable& b);
+    // /**
+    //  * @return true, if hash tables contain different objects, 
+    //  * else - false
+    //  */
+    // friend bool operator!=(const HashTable& a, const HashTable& b);
 
 private:
 
@@ -139,13 +128,8 @@ private:
         std::unique_ptr<Node> next;
     };
 
-    static constexpr size_t INITIAL_CAPACITY = 8;
-    static constexpr size_t HASH = 9;
-    static constexpr size_t EXPAND_COEFF = 2;
-    static constexpr float MAX_LOAD_FACTOR = 2;
-
     std::unique_ptr<std::unique_ptr<Node>[]> __storage;
-    size_t __capacity, __size;
+    size_t __capacity = INITIAL_CAPACITY, __size = 0;
 
     size_t _hash(const Key& k) const;
     bool _insertNode(const Key& k, const Value& v);
@@ -153,6 +137,10 @@ private:
     void _copy(const HashTable &b);
 
 }; // class HashTable
+
+#include "../src/hash_table.cpp"
+
+#endif
 
 /**
  * shed my skin
