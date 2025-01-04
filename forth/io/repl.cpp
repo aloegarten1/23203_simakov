@@ -2,6 +2,22 @@
 
 #include <memory>
 
+static bool contains(std::vector<char>& vec, char sym) {
+    for (auto elem : vec) {
+        if (elem == sym) { return true; }
+    }
+
+    return false;
+} 
+
+namespace {
+    std::map<std::string, std::string> limiters {
+        std::pair<std::string, std::string>({":", ";"}),
+        std::pair<std::string, std::string>({"if", "then"}),
+        std::pair<std::string, std::string>({"do", "loop"})
+    };
+}
+
 namespace Commands {
     frt::Command * createDup();
     frt::Command * createDrop();
@@ -53,30 +69,69 @@ bool Repl::isNumber(std::string word) {
 
 bool Repl::readAndEvalToken() {
     frt::Token * t;
+    bool res = readToken(&t, std::vector<char>{' ', '\t'});
     if (!t) { return false; }
-    if(!readToken(&t, ' ')) {
+    if(!res) {
         if (t) { delete t; }
         return false;
     }
-    bool res = forth_.execToken(t);
+    res = forth_.execToken(t);
     delete t;
     return res;
 }
 
-bool Repl::readToken(frt::Token ** t, char sep) {
+bool Repl::readExpression(frt::Expression **e, std::string stop) {
+    std::string word;
+    frt::Token ** t;
+    std::vector<frt::Token*> expr_;
+    
+    while (word != stop) {
+        readWord(word, std::vector<char>{' ', '\t', '\n'});
+        if (word == stop) { return true; }
+        if ("" == word) { return false; }
+        if (!isValid(word)) { return false; }
+
+        if (isBasicToken(word, t)) {
+            expr_.push_back(*t);
+        }
+
+        if ("if" == word) { 
+            frt::Expression **body;
+            readExpression(body, limiters[word]);
+            
+        }
+    }
+}
+
+bool Repl::readToken(frt::Token ** t, std::vector<char> seps) {
     std::string word;
     *t = nullptr;
 
-    readWord(word, ' ');
-    std::cout << "WORD LENGTH - " << word.length() << std::endl;
-    if ("" == word) { 
-        return true;
+    readWord(word, seps);
+    
+    if ("" == word) { return true; }
+    if (!isValid(word)) { return false; }
+    if (isBasicToken(word, t)) { return true; }
+
+    if (":" == word) {
+        std::string name;
+        readWord(name, std::vector<char>{'\n', ' ', '\t'});
+        
+        if (!isValid(name) || isBasicToken(name, nullptr)) {
+            std::cerr << "ERROR: Double definition of <<" << name << ">>." << std::endl;
+            return false; 
+        }
+
+        frt::Expression **e;
+        frt::Token *t = *e;
+        readExpression(e, limiters[word]);
+        forth_.defineWord(name, *e);
     }
 
-    if (!isValid(word)) {
-        return false;
-    }
+    return false;
+}
 
+bool Repl::isBasicToken(std::string& word, frt::Token **t) {
     if (isNumber(word)) {
         frt::StackValue val = atoi(word.c_str());
         *t = new frt::ValueToken(val);
@@ -89,27 +144,37 @@ bool Repl::readToken(frt::Token ** t, char sep) {
         return true;
     }
 
+    if(forth_.isWordDefined(word)) {
+        *t = forth_.getDefinition(word);
+        return true;
+    }
+
+    if(forth_.isVarDefined(word)) {
+        frt::StackValue val = forth_.getVarVal(word);
+        *t = new frt::ValueToken(val);
+
+        return true;
+    }
+
     return false;
 }
 
-void Repl::readWord(std::string& dst, char sep) 
-{
-    char c = skipSeps(sep);
-    if ('\n' == c) { 
-        
-        return; 
+void Repl::readWord(std::string& dst, std::vector<char> seps) 
+{   
+    char c = input_.get();
+    if (contains(seps, c)) {
+        c = skipSeps(seps);
     }
-    while (c && (c != sep) && (c != '\n')) {
-        output_ << "WAIT" << std::endl;
+    while (c && !contains(seps, c) && (c != '\n')) {
         dst += c;
         input_.get(c);
     }
 }
 
-char Repl::skipSeps(char sep) {
+char Repl::skipSeps(std::vector<char> seps) {
     char c;
     input_.get(c);
-    while (c == sep) {
+    while (contains(seps, c)) {
         input_.get(c);
     }
     return c;

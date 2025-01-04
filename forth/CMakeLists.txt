@@ -19,6 +19,9 @@ add_executable(
         interpreter/basics/tokens.hpp
         interpreter/basics/valueToken.hpp
 
+        interpreter/basics/expression.hpp
+        interpreter/basics/expression.cpp
+
         interpreter/basics/commands/command.hpp
         interpreter/basics/commands/commands.cpp
 

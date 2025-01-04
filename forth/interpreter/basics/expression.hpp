@@ -8,22 +8,19 @@ namespace frt {
 
 class Expression : public Token {
 public:
-    Expression() = default;
-    ~Expression() override = default;
+    Expression(std::vector<Token*>& expr);
 
-    void addToken(std::unique_ptr<Token>& token) {
-        expr_.push_back(std::move(token));
+    /**
+     * Shallow copy. Tokens NOT will be reinitialized
+     */
+    Expression(const Expression& e) : expr_(e.expr_) {}
+
+    virtual ~Expression() {
+        for (auto t : expr_) { delete t; }
     }
 
-    bool exec(ExecutionContext& context) override {
-        for (std::size_t i = 0; i < expr_.size(); ++i) {
-            if(!(expr_[i])->exec(context)) { 
-                return false;
-            }
-        }
-        return true;
-    }
+    bool exec(ExecutionContext& context) override;
 private:
-    std::vector<std::unique_ptr<Token>> expr_;
+    std::vector<Token *> expr_;
 }; // class Expression
 } // namespace frt

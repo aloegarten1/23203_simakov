@@ -13,9 +13,10 @@ public:
 
     void run();
 
-    void readWord(std::string& dst, char sep);
-    bool readToken(frt::Token ** t, char sep);
+    void readWord(std::string& dst, std::vector<char> seps);
+    bool readToken(frt::Token ** t, std::vector<char> seps);
     bool readAndEvalToken();
+    bool readExpression(frt::Expression **e, std::string stop);
 private:
     std::istream& input_;
     std::ostream& output_;
@@ -25,7 +26,8 @@ private:
     CommandFactory * f_ = CommandFactory::getInstance();
 private:
     void loadCommands();
-    char skipSeps(char sep = ' ');
+    char skipSeps(std::vector<char> seps);
     bool isValid(std::string word);
     bool isNumber(std::string word);
+    bool isBasicToken(std::string& word, frt::Token **t);
 };

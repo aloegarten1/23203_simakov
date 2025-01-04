@@ -7,3 +7,6 @@
 #include "commands/over.hpp"
 #include "commands/rot.hpp"
 #include "commands/swap.hpp"
+
+#include "doLoop.hpp"
+#include "ifThen.hpp"
