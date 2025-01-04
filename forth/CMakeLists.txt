@@ -4,6 +4,9 @@ project(forth_interpreter)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+add_compile_options(-fsanitize=address)
+add_link_options(-fsanitize=address)
+
 add_executable(
         forth 
         io/repl.cpp io/repl.hpp

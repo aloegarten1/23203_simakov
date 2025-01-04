@@ -3,12 +3,8 @@ CMakeFiles/forth.dir/io/repl.cpp.o: \
  /usr/include/stdc-predef.h \
  /home/stepan/projects/cpp/23203_simakov/forth/io/repl.hpp \
  /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/forth.hpp \
- /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/valueToken.hpp \
- /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/token.hpp \
- /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/../internals/executionContext.hpp \
- /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/../internals/stack/stack.hpp \
- /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/../internals/stack/../hardcoded.hpp \
- /usr/include/c++/11/cstddef \
+ /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/commands/command_factory.hpp \
+ /usr/include/c++/11/cassert \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -19,8 +15,7 @@ CMakeFiles/forth.dir/io/repl.cpp.o: \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/cpu_defines.h \
- /usr/include/c++/11/pstl/pstl_config.h \
- /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h \
+ /usr/include/c++/11/pstl/pstl_config.h /usr/include/assert.h \
  /usr/include/c++/11/iostream /usr/include/c++/11/ostream \
  /usr/include/c++/11/ios /usr/include/c++/11/iosfwd \
  /usr/include/c++/11/bits/stringfwd.h \
@@ -29,6 +24,7 @@ CMakeFiles/forth.dir/io/repl.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/x86_64-linux-gnu/bits/floatn.h \
  /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
+ /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
  /usr/include/x86_64-linux-gnu/bits/types/wint_t.h \
@@ -164,11 +160,7 @@ CMakeFiles/forth.dir/io/repl.cpp.o: \
  /usr/include/c++/11/bits/locale_facets.tcc \
  /usr/include/c++/11/bits/basic_ios.tcc \
  /usr/include/c++/11/bits/ostream.tcc /usr/include/c++/11/istream \
- /usr/include/c++/11/bits/istream.tcc /usr/include/c++/11/vector \
- /usr/include/c++/11/bits/stl_uninitialized.h \
- /usr/include/c++/11/bits/stl_vector.h \
- /usr/include/c++/11/bits/stl_bvector.h \
- /usr/include/c++/11/bits/vector.tcc /usr/include/c++/11/map \
+ /usr/include/c++/11/bits/istream.tcc /usr/include/c++/11/map \
  /usr/include/c++/11/bits/stl_tree.h \
  /usr/include/c++/11/ext/aligned_buffer.h \
  /usr/include/c++/11/bits/node_handle.h \
@@ -179,15 +171,34 @@ CMakeFiles/forth.dir/io/repl.cpp.o: \
  /usr/include/c++/11/bits/stl_multimap.h \
  /usr/include/c++/11/bits/erase_if.h \
  /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/tokens.hpp \
- /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/commands/dot.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/valueToken.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/token.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/../internals/executionContext.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/../internals/stack/stack.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/../internals/stack/../hardcoded.hpp \
+ /usr/include/c++/11/cstddef /usr/include/c++/11/vector \
+ /usr/include/c++/11/bits/stl_uninitialized.h \
+ /usr/include/c++/11/bits/stl_vector.h \
+ /usr/include/c++/11/bits/stl_bvector.h \
+ /usr/include/c++/11/bits/vector.tcc \
+ /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/commands/add.hpp \
  /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/commands/command.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/commands/div.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/commands/dot.hpp \
  /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/commands/drop.hpp \
  /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/commands/dup.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/commands/emit.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/commands/eq.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/commands/g.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/commands/l.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/commands/mult.hpp \
  /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/commands/over.hpp \
  /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/commands/rot.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/commands/subtract.hpp \
  /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/commands/swap.hpp \
- /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/commands/command_factory.hpp \
- /usr/include/c++/11/cassert /usr/include/assert.h \
+ /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/doLoop.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/expression.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/io/../interpreter/basics/ifThen.hpp \
  /usr/include/c++/11/memory \
  /usr/include/c++/11/bits/stl_raw_storage_iter.h \
  /usr/include/c++/11/bits/align.h /usr/include/c++/11/bit \

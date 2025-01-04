@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = 
 
-CXX_FLAGS = -std=gnu++23
+CXX_FLAGS = -fsanitize=address -std=gnu++23
 

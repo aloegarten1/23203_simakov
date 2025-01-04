@@ -1,7 +1,7 @@
 CMakeFiles/forth.dir/interpreter/basics/commands/commands.cpp.o: \
  /home/stepan/projects/cpp/23203_simakov/forth/interpreter/basics/commands/commands.cpp \
  /usr/include/stdc-predef.h \
- /home/stepan/projects/cpp/23203_simakov/forth/interpreter/basics/commands/dot.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/interpreter/basics/commands/add.hpp \
  /home/stepan/projects/cpp/23203_simakov/forth/interpreter/basics/commands/command.hpp \
  /home/stepan/projects/cpp/23203_simakov/forth/interpreter/basics/commands/../token.hpp \
  /home/stepan/projects/cpp/23203_simakov/forth/interpreter/basics/commands/../../internals/executionContext.hpp \
@@ -177,8 +177,16 @@ CMakeFiles/forth.dir/interpreter/basics/commands/commands.cpp.o: \
  /usr/include/c++/11/bits/invoke.h \
  /usr/include/c++/11/bits/stl_multimap.h \
  /usr/include/c++/11/bits/erase_if.h \
+ /home/stepan/projects/cpp/23203_simakov/forth/interpreter/basics/commands/div.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/interpreter/basics/commands/dot.hpp \
  /home/stepan/projects/cpp/23203_simakov/forth/interpreter/basics/commands/drop.hpp \
  /home/stepan/projects/cpp/23203_simakov/forth/interpreter/basics/commands/dup.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/interpreter/basics/commands/emit.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/interpreter/basics/commands/eq.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/interpreter/basics/commands/g.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/interpreter/basics/commands/l.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/interpreter/basics/commands/mult.hpp \
+ /home/stepan/projects/cpp/23203_simakov/forth/interpreter/basics/commands/subtract.hpp \
  /home/stepan/projects/cpp/23203_simakov/forth/interpreter/basics/commands/swap.hpp \
  /home/stepan/projects/cpp/23203_simakov/forth/interpreter/basics/commands/rot.hpp \
  /home/stepan/projects/cpp/23203_simakov/forth/interpreter/basics/commands/over.hpp

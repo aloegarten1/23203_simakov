@@ -1,7 +1,6 @@
 #pragma once
 
 #include "stack/stack.hpp"
-#include "../basics/expression.hpp"
 
 #include <iostream>
 #include <map>
@@ -27,38 +26,42 @@ public:
     size_t getStackDepth() const noexcept { return stack_.depth(); }
     bool isStackEmpty() const noexcept { return stack_.isEmpty(); }
 
-    void printStackVal(StackValue val) { output_ << val; }
+    void printStackVal(StackValue val) { output_ << val << " "; }
+    void printChar(char c) { output_ << c << " "; }
     void printValAsChar(StackValue val) { output_ << char(val); }
     void cr() { output_ << std::endl; }
 
-    void printStack() { stack_.printStack(output_); }
-
-    void defineWord(std::string& name, Expression *e) { 
-        words_.insert(std::pair<std::string, Expression*>({name, e}));
+    bool isVarDefined(std::string& name) { 
+        return vars_.count(name) != 0;
     }
 
-    Expression* getDefintionByName(std::string& name) { return words_[name]; }
-    bool isWordDefined(std::string& name) { return words_.count(name) != 0; } 
-
-    void defineVar(std::string& name, StackValue val) {
-        vars_.insert(std::pair<std::string, StackValue>({name, val}));
-    }
-
-    StackValue getVarValue(std::string& name) { return vars_[name]; }
-    bool isVarDefined(std::string& name) { return vars_.count(name) != 0; }
-    void deleteVar(std::string& name) { vars_.erase(name); }
-
-    bool setVarVal(std::string& name, StackValue val) { 
-        if (!isVarDefined(name)) { return false; }
-        vars_[name] = val; 
+    bool setVarVal(std::string& name, StackValue val) {
+        if (!isVarDefined(name)) {
+            return false;
+        }
+        vars_[name] = val;
         return true;
     }
+    
+    StackValue getVarVal(std::string& name) { 
+        return vars_.find(name)->second;
+    }
+
+    void addVar(std::string name, StackValue val) {
+        vars_.insert(
+            std::pair<std::string, StackValue>({name, val})
+        );
+    }
+
+    void deleteVar(std::string name) {
+        vars_.erase(name);
+    }
+
+    void printStack() { stack_.printStack(output_); }
 
 private:
     Stack stack_;
     std::ostream& output_;
-
-    std::map<std::string, Expression*> words_;
     std::map<std::string, StackValue> vars_;
 }; // class ExectuionContext;
 } // namespace frt

@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/forth.dir/interpreter/basics/commands/commands.cpp.o"
   "CMakeFiles/forth.dir/interpreter/basics/commands/commands.cpp.o.d"
+  "CMakeFiles/forth.dir/interpreter/basics/expression.cpp.o"
+  "CMakeFiles/forth.dir/interpreter/basics/expression.cpp.o.d"
   "CMakeFiles/forth.dir/interpreter/forth.cpp.o"
   "CMakeFiles/forth.dir/interpreter/forth.cpp.o.d"
   "CMakeFiles/forth.dir/interpreter/internals/executionContext.cpp.o"

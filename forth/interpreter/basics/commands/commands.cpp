@@ -1,6 +1,14 @@
+#include "add.hpp"
+#include "div.hpp"
 #include "dot.hpp"
 #include "drop.hpp"
 #include "dup.hpp"
+#include "emit.hpp"
+#include "eq.hpp"
+#include "g.hpp"
+#include "l.hpp"
+#include "mult.hpp"
+#include "subtract.hpp"
 #include "swap.hpp"
 #include "rot.hpp"
 #include "over.hpp"
@@ -42,9 +50,123 @@ Over::exec(ExecutionContext& context) {
 }
 
 bool
+Add::exec(ExecutionContext& context) {
+    if (context.getStackDepth() < _depth) { return false; }
+    StackValue a, b;
+
+    a = context.getTopVal();
+    context.popVal();
+    b = context.getTopVal();
+    context.popVal();
+
+    context.pushVal(a + b);
+
+    return true;
+}
+
+bool
+Subtract::exec(ExecutionContext& context) {
+    if (context.getStackDepth() < _depth) { return false; }
+    StackValue a, b;
+
+    a = context.getTopVal();
+    context.popVal();
+    b = context.getTopVal();
+    context.popVal();
+
+    context.pushVal(a - b);
+
+    return true;
+}
+
+bool
+Mult::exec(ExecutionContext& context) {
+    if (context.getStackDepth() < _depth) { return false; }
+    StackValue a, b;
+
+    a = context.getTopVal();
+    context.popVal();
+    b = context.getTopVal();
+    context.popVal();
+
+    context.pushVal(a * b);
+
+    return true;
+}
+
+bool
+Div::exec(ExecutionContext& context) {
+    if (context.getStackDepth() < _depth) { return false; }
+    StackValue a, b;
+
+    a = context.getTopVal();
+    context.popVal();
+    b = context.getTopVal();
+    context.popVal();
+
+    context.pushVal(a / b);
+
+    return true;
+}
+
+bool
+G::exec(ExecutionContext& context) {
+    if (context.getStackDepth() < _depth) { return false; }
+    StackValue a, b;
+
+    b = context.getTopVal();
+    context.popVal();
+    a = context.getTopVal();
+    context.popVal();
+
+    context.pushVal(-1 * (a > b));
+
+    return true;
+}
+
+bool
+L::exec(ExecutionContext& context) {
+    if (context.getStackDepth() < _depth) { return false; }
+    StackValue a, b;
+
+    b = context.getTopVal();
+    context.popVal();
+    a = context.getTopVal();
+    context.popVal();
+
+    context.pushVal(-1 * (a < b));
+
+    return true;
+}
+
+bool
+Eq::exec(ExecutionContext& context) {
+    if (context.getStackDepth() < _depth) { return false; }
+    StackValue a, b;
+
+    b = context.getTopVal();
+    context.popVal();
+    a = context.getTopVal();
+    context.popVal();
+
+    context.pushVal(-1 * (a == b));
+
+    return true;
+}
+
+bool
 Dot::exec(ExecutionContext& context) {
     if (context.getStackDepth() < _depth) { return false; }
     context.printStackVal(context.getTopVal());
+    context.popVal();
+
+    return true;
+}
+
+bool
+Emit::exec(ExecutionContext& context) {
+    if (context.getStackDepth() < _depth) { return false; }
+    context.printChar(char(context.getTopVal()));
     context.popVal();
 
     return true;

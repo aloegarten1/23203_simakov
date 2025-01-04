@@ -1,6 +1,7 @@
 #pragma once
 
 #include "token.hpp"
+#include <iostream>
 
 namespace frt {
 

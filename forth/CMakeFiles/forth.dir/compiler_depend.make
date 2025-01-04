@@ -3,7 +3,7 @@
 
 CMakeFiles/forth.dir/interpreter/basics/commands/commands.cpp.o: interpreter/basics/commands/commands.cpp \
   /usr/include/stdc-predef.h \
-  interpreter/basics/commands/dot.hpp \
+  interpreter/basics/commands/add.hpp \
   interpreter/basics/commands/command.hpp \
   interpreter/basics/token.hpp \
   interpreter/internals/executionContext.hpp \
@@ -218,21 +218,28 @@ CMakeFiles/forth.dir/interpreter/basics/commands/commands.cpp.o: interpreter/bas
   /usr/include/c++/11/bits/invoke.h \
   /usr/include/c++/11/bits/stl_multimap.h \
   /usr/include/c++/11/bits/erase_if.h \
+  interpreter/basics/commands/div.hpp \
+  interpreter/basics/commands/dot.hpp \
   interpreter/basics/commands/drop.hpp \
   interpreter/basics/commands/dup.hpp \
+  interpreter/basics/commands/emit.hpp \
+  interpreter/basics/commands/eq.hpp \
+  interpreter/basics/commands/g.hpp \
+  interpreter/basics/commands/l.hpp \
+  interpreter/basics/commands/mult.hpp \
+  interpreter/basics/commands/subtract.hpp \
   interpreter/basics/commands/swap.hpp \
   interpreter/basics/commands/rot.hpp \
   interpreter/basics/commands/over.hpp
 
+CMakeFiles/forth.dir/interpreter/basics/expression.cpp.o: interpreter/basics/expression.cpp \
+  /usr/include/stdc-predef.h
+
 CMakeFiles/forth.dir/interpreter/forth.cpp.o: interpreter/forth.cpp \
   /usr/include/stdc-predef.h \
   interpreter/forth.hpp \
-  interpreter/basics/valueToken.hpp \
-  interpreter/basics/token.hpp \
-  interpreter/internals/executionContext.hpp \
-  interpreter/internals/stack/stack.hpp \
-  interpreter/internals/hardcoded.hpp \
-  /usr/include/c++/11/cstddef \
+  interpreter/basics/commands/command_factory.hpp \
+  /usr/include/c++/11/cassert \
   /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
   /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
   /usr/include/features.h \
@@ -245,7 +252,7 @@ CMakeFiles/forth.dir/interpreter/forth.cpp.o: interpreter/forth.cpp \
   /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
   /usr/include/x86_64-linux-gnu/c++/11/bits/cpu_defines.h \
   /usr/include/c++/11/pstl/pstl_config.h \
-  /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h \
+  /usr/include/assert.h \
   /usr/include/c++/11/iostream \
   /usr/include/c++/11/ostream \
   /usr/include/c++/11/ios \
@@ -258,6 +265,7 @@ CMakeFiles/forth.dir/interpreter/forth.cpp.o: interpreter/forth.cpp \
   /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
   /usr/include/x86_64-linux-gnu/bits/floatn.h \
   /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h \
   /usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h \
   /usr/include/x86_64-linux-gnu/bits/wchar.h \
   /usr/include/x86_64-linux-gnu/bits/types/wint_t.h \
@@ -423,11 +431,6 @@ CMakeFiles/forth.dir/interpreter/forth.cpp.o: interpreter/forth.cpp \
   /usr/include/c++/11/bits/ostream.tcc \
   /usr/include/c++/11/istream \
   /usr/include/c++/11/bits/istream.tcc \
-  /usr/include/c++/11/vector \
-  /usr/include/c++/11/bits/stl_uninitialized.h \
-  /usr/include/c++/11/bits/stl_vector.h \
-  /usr/include/c++/11/bits/stl_bvector.h \
-  /usr/include/c++/11/bits/vector.tcc \
   /usr/include/c++/11/map \
   /usr/include/c++/11/bits/stl_tree.h \
   /usr/include/c++/11/ext/aligned_buffer.h \
@@ -442,16 +445,35 @@ CMakeFiles/forth.dir/interpreter/forth.cpp.o: interpreter/forth.cpp \
   /usr/include/c++/11/bits/stl_multimap.h \
   /usr/include/c++/11/bits/erase_if.h \
   interpreter/basics/tokens.hpp \
-  interpreter/basics/commands/dot.hpp \
+  interpreter/basics/valueToken.hpp \
+  interpreter/basics/token.hpp \
+  interpreter/internals/executionContext.hpp \
+  interpreter/internals/stack/stack.hpp \
+  interpreter/internals/hardcoded.hpp \
+  /usr/include/c++/11/cstddef \
+  /usr/include/c++/11/vector \
+  /usr/include/c++/11/bits/stl_uninitialized.h \
+  /usr/include/c++/11/bits/stl_vector.h \
+  /usr/include/c++/11/bits/stl_bvector.h \
+  /usr/include/c++/11/bits/vector.tcc \
+  interpreter/basics/commands/add.hpp \
   interpreter/basics/commands/command.hpp \
+  interpreter/basics/commands/div.hpp \
+  interpreter/basics/commands/dot.hpp \
   interpreter/basics/commands/drop.hpp \
   interpreter/basics/commands/dup.hpp \
+  interpreter/basics/commands/emit.hpp \
+  interpreter/basics/commands/eq.hpp \
+  interpreter/basics/commands/g.hpp \
+  interpreter/basics/commands/l.hpp \
+  interpreter/basics/commands/mult.hpp \
   interpreter/basics/commands/over.hpp \
   interpreter/basics/commands/rot.hpp \
+  interpreter/basics/commands/subtract.hpp \
   interpreter/basics/commands/swap.hpp \
-  interpreter/basics/commands/command_factory.hpp \
-  /usr/include/c++/11/cassert \
-  /usr/include/assert.h \
+  interpreter/basics/doLoop.hpp \
+  interpreter/basics/expression.hpp \
+  interpreter/basics/ifThen.hpp \
   /usr/include/c++/11/memory \
   /usr/include/c++/11/bits/stl_raw_storage_iter.h \
   /usr/include/c++/11/bits/align.h \
@@ -707,12 +729,8 @@ CMakeFiles/forth.dir/io/repl.cpp.o: io/repl.cpp \
   /usr/include/stdc-predef.h \
   io/repl.hpp \
   interpreter/forth.hpp \
-  interpreter/basics/valueToken.hpp \
-  interpreter/basics/token.hpp \
-  interpreter/internals/executionContext.hpp \
-  interpreter/internals/stack/stack.hpp \
-  interpreter/internals/hardcoded.hpp \
-  /usr/include/c++/11/cstddef \
+  interpreter/basics/commands/command_factory.hpp \
+  /usr/include/c++/11/cassert \
   /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
   /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
   /usr/include/features.h \
@@ -725,7 +743,7 @@ CMakeFiles/forth.dir/io/repl.cpp.o: io/repl.cpp \
   /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
   /usr/include/x86_64-linux-gnu/c++/11/bits/cpu_defines.h \
   /usr/include/c++/11/pstl/pstl_config.h \
-  /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h \
+  /usr/include/assert.h \
   /usr/include/c++/11/iostream \
   /usr/include/c++/11/ostream \
   /usr/include/c++/11/ios \
@@ -738,6 +756,7 @@ CMakeFiles/forth.dir/io/repl.cpp.o: io/repl.cpp \
   /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
   /usr/include/x86_64-linux-gnu/bits/floatn.h \
   /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h \
   /usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h \
   /usr/include/x86_64-linux-gnu/bits/wchar.h \
   /usr/include/x86_64-linux-gnu/bits/types/wint_t.h \
@@ -903,11 +922,6 @@ CMakeFiles/forth.dir/io/repl.cpp.o: io/repl.cpp \
   /usr/include/c++/11/bits/ostream.tcc \
   /usr/include/c++/11/istream \
   /usr/include/c++/11/bits/istream.tcc \
-  /usr/include/c++/11/vector \
-  /usr/include/c++/11/bits/stl_uninitialized.h \
-  /usr/include/c++/11/bits/stl_vector.h \
-  /usr/include/c++/11/bits/stl_bvector.h \
-  /usr/include/c++/11/bits/vector.tcc \
   /usr/include/c++/11/map \
   /usr/include/c++/11/bits/stl_tree.h \
   /usr/include/c++/11/ext/aligned_buffer.h \
@@ -922,16 +936,35 @@ CMakeFiles/forth.dir/io/repl.cpp.o: io/repl.cpp \
   /usr/include/c++/11/bits/stl_multimap.h \
   /usr/include/c++/11/bits/erase_if.h \
   interpreter/basics/tokens.hpp \
-  interpreter/basics/commands/dot.hpp \
+  interpreter/basics/valueToken.hpp \
+  interpreter/basics/token.hpp \
+  interpreter/internals/executionContext.hpp \
+  interpreter/internals/stack/stack.hpp \
+  interpreter/internals/hardcoded.hpp \
+  /usr/include/c++/11/cstddef \
+  /usr/include/c++/11/vector \
+  /usr/include/c++/11/bits/stl_uninitialized.h \
+  /usr/include/c++/11/bits/stl_vector.h \
+  /usr/include/c++/11/bits/stl_bvector.h \
+  /usr/include/c++/11/bits/vector.tcc \
+  interpreter/basics/commands/add.hpp \
   interpreter/basics/commands/command.hpp \
+  interpreter/basics/commands/div.hpp \
+  interpreter/basics/commands/dot.hpp \
   interpreter/basics/commands/drop.hpp \
   interpreter/basics/commands/dup.hpp \
+  interpreter/basics/commands/emit.hpp \
+  interpreter/basics/commands/eq.hpp \
+  interpreter/basics/commands/g.hpp \
+  interpreter/basics/commands/l.hpp \
+  interpreter/basics/commands/mult.hpp \
   interpreter/basics/commands/over.hpp \
   interpreter/basics/commands/rot.hpp \
+  interpreter/basics/commands/subtract.hpp \
   interpreter/basics/commands/swap.hpp \
-  interpreter/basics/commands/command_factory.hpp \
-  /usr/include/c++/11/cassert \
-  /usr/include/assert.h \
+  interpreter/basics/doLoop.hpp \
+  interpreter/basics/expression.hpp \
+  interpreter/basics/ifThen.hpp \
   /usr/include/c++/11/memory \
   /usr/include/c++/11/bits/stl_raw_storage_iter.h \
   /usr/include/c++/11/bits/align.h \
@@ -1004,6 +1037,20 @@ interpreter/internals/executionContext.cpp:
 
 /usr/include/x86_64-linux-gnu/bits/getopt_core.h:
 
+/usr/include/x86_64-linux-gnu/bits/confname.h:
+
+/usr/include/c++/11/bits/ranges_algobase.h:
+
+/usr/include/x86_64-linux-gnu/bits/posix_opt.h:
+
+/usr/include/x86_64-linux-gnu/bits/xopen_lim.h:
+
+/usr/include/x86_64-linux-gnu/bits/posix2_lim.h:
+
+/usr/include/x86_64-linux-gnu/bits/local_lim.h:
+
+/usr/include/x86_64-linux-gnu/bits/posix1_lim.h:
+
 /usr/include/x86_64-linux-gnu/c++/11/bits/c++allocator.h:
 
 /usr/include/c++/11/bits/locale_classes.h:
@@ -1044,6 +1091,12 @@ interpreter/basics/commands/drop.hpp:
 
 /usr/include/x86_64-linux-gnu/gnu/stubs.h:
 
+/usr/include/linux/limits.h:
+
+/usr/include/c++/11/bits/shared_ptr_base.h:
+
+/usr/include/c++/11/bits/basic_string.h:
+
 /usr/include/x86_64-linux-gnu/bits/locale.h:
 
 /usr/include/locale.h:
@@ -1074,6 +1127,8 @@ interpreter/basics/commands/drop.hpp:
 
 /usr/include/c++/11/bits/cpp_type_traits.h:
 
+interpreter/basics/expression.hpp:
+
 /usr/include/c++/11/bits/stl_iterator_base_funcs.h:
 
 /usr/include/c++/11/bits/ranges_cmp.h:
@@ -1085,6 +1140,8 @@ interpreter/basics/commands/drop.hpp:
 /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h:
+
+interpreter/basics/ifThen.hpp:
 
 /usr/include/c++/11/bits/stl_iterator_base_types.h:
 
@@ -1110,11 +1167,23 @@ interpreter/internals/hardcoded.hpp:
 
 /usr/include/linux/errno.h:
 
+/usr/lib/gcc/x86_64-linux-gnu/11/include/syslimits.h:
+
+/usr/include/c++/11/debug/debug.h:
+
+/usr/include/features-time64.h:
+
 /usr/include/c++/11/backward/binders.h:
 
 /usr/include/x86_64-linux-gnu/bits/time.h:
 
 /usr/include/x86_64-linux-gnu/bits/select.h:
+
+interpreter/basics/commands/subtract.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/uio_lim.h:
+
+/usr/include/c++/11/string:
 
 /usr/include/x86_64-linux-gnu/bits/types/time_t.h:
 
@@ -1144,6 +1213,8 @@ interpreter/internals/hardcoded.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
 
+interpreter/basics/commands/add.hpp:
+
 /usr/include/x86_64-linux-gnu/bits/wctype-wchar.h:
 
 /usr/include/c++/11/bits/ranges_uninitialized.h:
@@ -1160,6 +1231,8 @@ interpreter/basics/commands/commands.cpp:
 
 /usr/include/c++/11/bits/memoryfwd.h:
 
+interpreter/basics/commands/div.hpp:
+
 interpreter/internals/stack/stack.hpp:
 
 /usr/include/c++/11/ostream:
@@ -1169,8 +1242,6 @@ interpreter/internals/stack/stack.hpp:
 /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h:
 
 /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h:
-
-/usr/include/x86_64-linux-gnu/bits/confname.h:
 
 /usr/include/x86_64-linux-gnu/gnu/stubs-64.h:
 
@@ -1183,8 +1254,6 @@ interpreter/internals/stack/stack.hpp:
 /usr/include/x86_64-linux-gnu/asm/errno.h:
 
 /usr/include/x86_64-linux-gnu/sys/cdefs.h:
-
-interpreter/basics/commands/dot.hpp:
 
 interpreter/basics/token.hpp:
 
@@ -1276,21 +1345,17 @@ interpreter/basics/commands/rot.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/wchar.h:
 
-/usr/include/x86_64-linux-gnu/bits/local_lim.h:
-
-/usr/include/c++/11/bits/shared_ptr_base.h:
-
-/usr/include/c++/11/bits/basic_string.h:
-
-/usr/include/linux/limits.h:
-
-/usr/include/x86_64-linux-gnu/bits/posix2_lim.h:
-
 /usr/include/c++/11/bits/exception_ptr.h:
 
 /usr/include/c++/11/ext/string_conversions.h:
 
 /usr/include/x86_64-linux-gnu/c++/11/bits/atomic_word.h:
+
+/usr/include/x86_64-linux-gnu/bits/environments.h:
+
+/usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h:
+
+/usr/include/c++/11/bits/exception_defines.h:
 
 /usr/include/x86_64-linux-gnu/bits/cpu-set.h:
 
@@ -1308,6 +1373,8 @@ interpreter/basics/commands/rot.hpp:
 
 /usr/include/c++/11/bits/string_view.tcc:
 
+interpreter/basics/doLoop.hpp:
+
 /usr/include/c++/11/bits/functexcept.h:
 
 /usr/include/c++/11/bits/concept_check.h:
@@ -1317,12 +1384,6 @@ interpreter/basics/commands/rot.hpp:
 /usr/include/c++/11/streambuf:
 
 /usr/include/x86_64-linux-gnu/c++/11/bits/c++locale.h:
-
-/usr/include/x86_64-linux-gnu/bits/xopen_lim.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
-
-/usr/include/c++/11/bits/ostream_insert.h:
 
 /usr/include/c++/11/bits/cxxabi_forced.h:
 
@@ -1335,8 +1396,6 @@ interpreter/basics/commands/rot.hpp:
 /usr/include/c++/11/cassert:
 
 /usr/include/stdlib.h:
-
-/usr/include/x86_64-linux-gnu/bits/waitflags.h:
 
 /usr/include/x86_64-linux-gnu/sys/types.h:
 
@@ -1406,6 +1465,8 @@ interpreter/forth.hpp:
 
 /usr/include/asm-generic/errno.h:
 
+interpreter/basics/commands/emit.hpp:
+
 /usr/include/x86_64-linux-gnu/bits/types/error_t.h:
 
 /usr/include/c++/11/bits/charconv.h:
@@ -1437,6 +1498,8 @@ interpreter/forth.hpp:
 interpreter/basics/tokens.hpp:
 
 /usr/include/c++/11/bits/basic_ios.h:
+
+interpreter/basics/expression.cpp:
 
 /usr/include/c++/11/bits/exception.h:
 
@@ -1488,12 +1551,6 @@ interpreter/forth.cpp:
 
 /usr/include/c++/11/bits/stl_relops.h:
 
-/usr/include/c++/11/debug/debug.h:
-
-/usr/include/features-time64.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/11/include/syslimits.h:
-
 /usr/include/c++/11/array:
 
 /usr/include/c++/11/new:
@@ -1510,6 +1567,22 @@ interpreter/forth.cpp:
 
 /usr/include/c++/11/bits/erase_if.h:
 
+interpreter/basics/commands/dot.hpp:
+
+interpreter/basics/commands/eq.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/waitflags.h:
+
+interpreter/basics/commands/g.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
+
+/usr/include/c++/11/bits/ostream_insert.h:
+
+interpreter/basics/commands/l.hpp:
+
+interpreter/basics/commands/mult.hpp:
+
 interpreter/basics/valueToken.hpp:
 
 /usr/include/c++/11/memory:
@@ -1521,19 +1594,3 @@ interpreter/basics/valueToken.hpp:
 /usr/include/c++/11/bits/shared_ptr_atomic.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/11/include/limits.h:
-
-/usr/include/x86_64-linux-gnu/bits/posix1_lim.h:
-
-/usr/include/c++/11/string:
-
-/usr/include/x86_64-linux-gnu/bits/uio_lim.h:
-
-/usr/include/c++/11/bits/ranges_algobase.h:
-
-/usr/include/x86_64-linux-gnu/bits/posix_opt.h:
-
-/usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h:
-
-/usr/include/c++/11/bits/exception_defines.h:
-
-/usr/include/x86_64-linux-gnu/bits/environments.h:

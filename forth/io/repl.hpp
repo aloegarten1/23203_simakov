@@ -14,9 +14,10 @@ public:
     void run();
 
     void readWord(std::string& dst, std::vector<char> seps);
-    bool readToken(frt::Token ** t, std::vector<char> seps);
+    bool readToken(frt::Token*& t, std::vector<char> seps);
     bool readAndEvalToken();
-    bool readExpression(frt::Expression **e, std::string stop);
+    bool readExpression(frt::Expression*& e, std::string stop);
+    // bool readExpression(frt::Expression **e, std::string stop);
 private:
     std::istream& input_;
     std::ostream& output_;
@@ -29,5 +30,5 @@ private:
     char skipSeps(std::vector<char> seps);
     bool isValid(std::string word);
     bool isNumber(std::string word);
-    bool isBasicToken(std::string& word, frt::Token **t);
+    bool isBasicToken(std::string& word, frt::Token*& t);
 };

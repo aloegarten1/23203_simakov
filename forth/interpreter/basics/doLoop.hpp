@@ -1,16 +1,19 @@
 #pragma once
 
-#include "token.hpp"
+#include "expression.hpp"
+#include <iostream>
 
 namespace frt {
 
 class DoLoop : public Token {
 public:
-    DoLoop(Expression& e) : expr_(e) {}
-    virtual ~DoLoop() = default;
+    DoLoop(Expression * e) : expr_(e) {}
+    virtual ~DoLoop() {
+        delete expr_;
+    }
 
     virtual bool exec(ExecutionContext& context) {
-        StackValue i, lim, prevI;
+        StackValue i, lim, prevI = -1;
 
         if (context.getStackDepth() < 2) { return false; }
         i = context.getTopVal();
@@ -20,17 +23,18 @@ public:
 
         std::string iName = std::string("i");
         if (!context.isVarDefined(iName)) {
-            context.defineVar(iName, i);
+            context.addVar(iName, i);
         }
 
         else {
-            prevI = context.getVarValue(iName);
+            prevI = context.getVarVal(iName);
             context.setVarVal(iName, i);
         }
-
-        for ( ; i < lim ; ++i) {
-            if (!expr_.exec(context)) { return false; }
-            context.setVarVal(iName, i + 1);
+        
+        std::cout << "ALARM " << i << std::endl;
+        for (StackValue i_ = i ; i_ < lim ; ++i_) {
+            if (!expr_->exec(context)) { return false; }
+            context.setVarVal(iName, i_ + 1);
         }
 
         if (prevI >= 0) { context.setVarVal(iName, prevI); }
@@ -39,6 +43,6 @@ public:
         return true;
     }
 private:
-    Expression& expr_;
+    Expression * expr_;
 }; // class DoLoop
 } // namespace frt

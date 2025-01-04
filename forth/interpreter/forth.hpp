@@ -1,11 +1,7 @@
 #pragma once
 
-
-#include "basics/valueToken.hpp"
-#include "basics/tokens.hpp"
 #include "basics/commands/command_factory.hpp"
-#include "internals/executionContext.hpp"
-
+#include "basics/tokens.hpp"
 #include <memory>
 
 namespace frt {
@@ -20,15 +16,17 @@ public:
     void printStack() { context_.printStack(); }
 
     void defineWord(std::string& name, Expression *expr) {
-        context_.defineWord(name, expr);
+        words_.insert(
+            std::pair<std::string, Expression*>({name, expr})
+        );
     }
 
     Expression* getDefinition(std::string& name) {
-        return context_.getDefintionByName(name);
+        return words_.find(name)->second;
     } 
 
     bool isWordDefined(std::string& name) {
-        return context_.isWordDefined(name);
+        return words_.count(name) != 0;
     }
 
     bool isVarDefined(std::string& name) { 
@@ -40,11 +38,18 @@ public:
     }
     
     StackValue getVarVal(std::string& name) { 
-        return context_.getVarValue(name);
+        return context_.getVarVal(name);
+    }
+
+    void addVar(std::string name, StackValue val) {
+        context_.addVar(name, val);
     }
 
 private:
     ExecutionContext context_;
+
+    std::map<std::string, Expression*> words_;
+    std::map<std::string, StackValue> vars_;
 }; // class Forth
 
 } // namespace frt
