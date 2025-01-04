@@ -95,7 +95,10 @@ bool Repl::readToken(frt::Token ** t, char sep) {
 void Repl::readWord(std::string& dst, char sep) 
 {
     char c = skipSeps(sep);
-    if ('\n' == c) { return; }
+    if ('\n' == c) { 
+        
+        return; 
+    }
     while (c && (c != sep) && (c != '\n')) {
         output_ << "WAIT" << std::endl;
         dst += c;
