@@ -14,6 +14,7 @@ public:
     
     virtual bool exec(ExecutionContext& context) {
         context.pushVal(val_);
+        context.println("ok");
         return true;
     }
 protected:

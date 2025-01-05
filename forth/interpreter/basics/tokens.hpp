@@ -19,4 +19,3 @@
 
 #include "doLoop.hpp"
 #include "ifThen.hpp"
-

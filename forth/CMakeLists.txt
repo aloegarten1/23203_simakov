@@ -9,24 +9,52 @@ add_link_options(-fsanitize=address)
 
 add_executable(
         forth 
-        io/repl.cpp io/repl.hpp
-        interpreter/forth.cpp interpreter/forth.hpp
-
+        io/main.cpp
+        io/repl.cpp
+        interpreter/forth.cpp
         interpreter/internals/executionContext.cpp
-        interpreter/internals/executionContext.hpp
-        
         interpreter/internals/stack/stack.cpp
-        interpreter/internals/stack/stack.hpp
-
-        interpreter/basics/token.hpp
-        interpreter/basics/tokens.hpp
-        interpreter/basics/valueToken.hpp
-
-        interpreter/basics/expression.hpp
         interpreter/basics/expression.cpp
-
-        interpreter/basics/commands/command.hpp
         interpreter/basics/commands/commands.cpp
-
-        interpreter/basics/commands/command_factory.hpp
 )
+
+ 
+
+include(FetchContent)
+FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG v1.15.2
+)
+
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+
+enable_testing()
+
+add_executable(
+  forth_test
+  test/launch_test.cpp
+  test/stack_test.cpp
+  test/tokens_test.cpp
+  test/execution_context_test.cpp
+  test/expression_test.cpp
+  test/repl_test.cpp
+  
+  interpreter/internals/stack/stack.cpp
+  interpreter/internals/stack/stack.hpp
+  interpreter/forth.cpp
+  interpreter/internals/executionContext.hpp
+  interpreter/basics/expression.cpp
+  interpreter/basics/commands/commands.cpp
+  io/repl.cpp
+)
+
+target_link_libraries(
+  forth_test GTest::gtest_main  
+)
+
+include(GoogleTest)
+gtest_discover_tests(forth_test)

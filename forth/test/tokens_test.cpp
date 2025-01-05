@@ -1,5 +1,5 @@
 #include "../interpreter/basics/valueToken.hpp"
-#include "../interpreter/basics/commands/commands.hpp"
+#include "../interpreter/basics/commands/dup.hpp"
 #include "../interpreter/internals/executionContext.hpp"
 
 #include <gtest/gtest.h>

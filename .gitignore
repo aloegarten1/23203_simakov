@@ -7,4 +7,5 @@ forth/playground.cpp
 forth/Makefile
 forth/CMakeCache.txt
 forth/forth
+forth/build
 

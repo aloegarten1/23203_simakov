@@ -27,6 +27,7 @@ public:
     bool isStackEmpty() const noexcept { return stack_.isEmpty(); }
 
     void printStackVal(StackValue val) { output_ << val << " "; }
+    void println(std::string str) { output_ << str << '\n'; }
     void printChar(char c) { output_ << c << " "; }
     void printValAsChar(StackValue val) { output_ << char(val); }
     void cr() { output_ << std::endl; }

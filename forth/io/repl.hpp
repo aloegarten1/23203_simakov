@@ -13,8 +13,8 @@ public:
 
     void run();
 
-    void readWord(std::string& dst, std::vector<char> seps);
-    bool readToken(frt::Token*& t, std::vector<char> seps);
+    bool readWord(std::string& dst);
+    bool readToken(frt::Token*& t);
     bool readAndEvalToken();
     bool readExpression(frt::Expression*& e, std::string stop);
     // bool readExpression(frt::Expression **e, std::string stop);
@@ -22,6 +22,8 @@ private:
     std::istream& input_;
     std::ostream& output_;
     frt::Forth forth_;
+
+    std::vector<char> seps = {' ', '\t', '\n'};
 
     using CommandFactory = frt::CommandFactory<frt::Command, std::string, frt::Command*(*)()>;
     CommandFactory * f_ = CommandFactory::getInstance();
