@@ -1,6 +1,8 @@
 #include "repl.hpp"
 #include "../interpreter/basics/errors.hpp"
 
+#include <stdio.h>
+#include <iostream>
 #include <memory>
 
 namespace
@@ -32,10 +34,26 @@ namespace Commands
     frt::Command *createEmit();
 }
 
+void Repl::init()
+{
+    interactive_ = false;
+ 
+    // test whether a file descriptor refers to a terminal
+    // dirty hack: 0 - stdin
+    if (&input_ == &std::cin && isatty(0))
+    {
+        interactive_ = true;
+    }
+}
+
 void Repl::run()
 {
     loadCommands();
-    output_ << "Welcome to Forth REPL mode" << std::endl;
+
+    if (interactive_)
+    {
+        output_ << "Welcome to FORTH REPL mode." << std::endl;
+    }
 
     frt::Token *t;
 
@@ -50,7 +68,7 @@ void Repl::run()
         }
         catch (const std::exception &e)
         {
-            std::cout << e.what() << std::endl;
+            output_ << e.what() << std::endl;
             continue;
         }
     }
