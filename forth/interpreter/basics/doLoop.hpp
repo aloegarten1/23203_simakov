@@ -24,8 +24,8 @@ public:
         std::string iName = std::string("i");
         if (!context.isVarDefined(iName)) {
             context.addVar(iName, i);
+            std::cout << "DEFINED I" << std::endl;
         }
-
         else {
             prevI = context.getVarVal(iName);
             context.setVarVal(iName, i);

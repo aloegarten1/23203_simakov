@@ -52,19 +52,6 @@ void Repl::run() {
     }
 }
 
-bool Repl::readAndEvalToken() {
-    frt::Token * t;
-    bool res = readToken(t, std::vector<char>{' ', '\t'});
-    if (!t) { return false; }
-    if(!res) {
-        if (t) { delete t; }
-        return false;
-    }
-    res = forth_.execToken(t);
-    delete t;
-    return res;
-}
-
 bool Repl::readExpression(frt::Expression*& e, std::string stop) {
     std::string word;
     frt::Token * t;
@@ -93,20 +80,20 @@ bool Repl::readExpression(frt::Expression*& e, std::string stop) {
             }
 
             frt::Expression *e;
-            bool res = readExpression(e, limiters[word]);
+            if(!readExpression(e, limiters[word])) { return false; }
             forth_.defineWord(name, e);
         }        
 
         if ("if" == word) { 
             frt::Expression * body;
-            readExpression(body, limiters[word]);
+            if(!readExpression(body, limiters[word])) { return false; }
             t = new frt::IfThen(body);
             expr_.push_back(t);
         }
 
         if ("do" == word) { 
             frt::Expression * body;
-            readExpression(body, limiters[word]);
+            if(!readExpression(body, limiters[word])) { return false; }
             t = new frt::DoLoop(body);
             expr_.push_back(t);
         }
@@ -144,7 +131,7 @@ bool Repl::readToken(frt::Token*& t, std::vector<char> seps) {
 
         frt::Expression *e;
         bool res = readExpression(e, limiters[word]);
-        forth_.defineWord(name, e);
+        if (res) { forth_.defineWord(name, e); }
         return res;
     }
 

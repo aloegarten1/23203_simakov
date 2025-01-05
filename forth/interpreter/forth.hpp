@@ -49,7 +49,6 @@ private:
     ExecutionContext context_;
 
     std::map<std::string, Expression*> words_;
-    std::map<std::string, StackValue> vars_;
 }; // class Forth
 
 } // namespace frt
