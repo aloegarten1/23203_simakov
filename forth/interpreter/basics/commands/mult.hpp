@@ -12,5 +12,5 @@ public:
     bool exec(ExecutionContext& context) override;
 protected:
     std::size_t _depth;
-}; // class Subtract
+}; // class Mult
 } // namespace frt

@@ -266,7 +266,7 @@ bool Repl::isBasicToken(std::string &word, frt::Token *&t)
 void Repl::loadCommands()
 {
     f_->regist3r("+", Commands::createAdd);
-    f_->regist3r("-", Commands::createAdd);
+    f_->regist3r("-", Commands::createSubtract);
     f_->regist3r("*", Commands::createMult);
     f_->regist3r("/", Commands::createDiv);
 
