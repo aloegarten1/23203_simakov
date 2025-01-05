@@ -3,7 +3,10 @@
 
 #include <stdio.h>
 #include <iostream>
-#include <memory>
+#include <unistd.h> // 4 isatty
+// #include <memory>
+
+// #define DEBUG
 
 namespace
 {
@@ -37,7 +40,7 @@ namespace Commands
 void Repl::init()
 {
     interactive_ = false;
- 
+
     // test whether a file descriptor refers to a terminal
     // dirty hack: 0 - stdin
     if (&input_ == &std::cin && isatty(0))
@@ -63,6 +66,7 @@ void Repl::run()
         {
             if (!readToken(t))
             {
+                output_.flush();
                 return;
             }
         }
@@ -326,30 +330,65 @@ static bool contains(std::vector<char> &vec, char sym)
 
 bool Repl::readWord(std::string &dst)
 {
-    char c = input_.get();
-
-    if (c == EOF)
+    try
     {
+
+        if (input_.eof())
+        {
+            return false;
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
         return false;
     }
 
-    if (contains(this->seps, c))
+    char c;
+
+#if defined(DEBUG)
+    std::cerr << "readWord debug 1 \n";
+#endif
+
+    this->input_.get(c);
+
+#if defined(DEBUG)
+    std::cerr << "readWord debug 2 " << c << " \n";
+#endif
+
+    while (c <= ' ')
     {
-        c = skipSeps(seps);
-        if (c == EOF)
+        if (input_.eof())
         {
             return false;
         }
+
+#if defined(DEBUG)
+        std::cerr << "readWord debug 3 \n";
+#endif
+        this->input_.get(c);
+
+#if defined(DEBUG)
+        std::cerr << "readWord debug 4 " << c << " \n";
+#endif
     }
 
-    while (c && !contains(Repl::seps, c) && (c != '\n'))
+    while (c > ' ')
     {
-        dst += c;
-        input_.get(c);
-        if (c == EOF)
+        if (input_.eof())
         {
-            return false;
+            return true;
         }
+        dst += c;
+
+#if defined(DEBUG)
+        std::cerr << "readWord debug 5 \n";
+#endif
+        this->input_.get(c);
+
+#if defined(DEBUG)
+        std::cerr << "readWord debug 6 " << c << " \n";
+#endif
     }
 
     return true;

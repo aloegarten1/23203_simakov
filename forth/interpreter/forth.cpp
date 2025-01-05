@@ -1,6 +1,6 @@
 #include "forth.hpp"
 
-#include <memory>
+//#include <memory>
 
 namespace Commands {
     frt::Command * createAdd() {

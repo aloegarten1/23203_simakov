@@ -4,6 +4,8 @@
 
 using namespace std;
 
+/*
+
 Repl MockRepl(std::string input, std::ostream &os)
 {
 
@@ -11,44 +13,58 @@ Repl MockRepl(std::string input, std::ostream &os)
     return Repl(is, os);
 }
 
-TEST(REPL, PushOnePositiveNumber)
+*/
+
+std::string repl(std::string input)
 {
     std::ostringstream os;
-
-    Repl repl = MockRepl("123\n.\n", os);
+    std::istringstream is(input);
+    Repl repl = Repl(is, os);
     repl.run();
-
-    EXPECT_EQ(os.str(), "123 ");
+    return os.str();
 }
 
+TEST(REPL, PushOnePositiveNumber)
+{
+    std::string res = repl("123\n.");
+    EXPECT_EQ(res, "123 ");
+}
 
 TEST(REPL, PLUS_BAD)
 {
-    std::ostringstream os;
-
-    Repl repl = MockRepl("2\n2\n+\n.\n", os);
-    repl.run();
-
-    EXPECT_NE(os.str(), "44");
+    std::string res = repl("2\n2\n+\n.\n");
+    EXPECT_NE(res, "44");
 }
 
 TEST(REPL, PLUS_BAD_ES)
 {
-    std::ostringstream os;
-
-    Repl repl = MockRepl("55\n+\n", os);
-    repl.run();
-
-    EXPECT_EQ(os.str(), "exec error: +\n");
+    std::string res = repl("55\n+\n");
+    EXPECT_EQ(res, "exec error: +\n");
 }
 
 TEST(REPL, PLUS_GOOD)
 {
-    std::ostringstream os;
 
-    Repl repl = MockRepl("2\n2\n+\n.\n", os);
-    repl.run();
-
-    EXPECT_EQ(os.str(), "4 ");
+    std::string res = repl("2\n2\n+\n.\n");
+    EXPECT_EQ(res, "4 ");
 }
 
+
+TEST(REPL, MINUS_BAD)
+{
+    std::string res = repl("2\n2\n-\n.\n");
+    EXPECT_NE(res, "44");
+}
+
+TEST(REPL, MINUS_BAD_ES)
+{
+    std::string res = repl("55\n-\n");
+    EXPECT_EQ(res, "exec error: -\n");
+}
+
+TEST(REPL, MINUS_GOOD)
+{
+
+    std::string res = repl("5\n10\n-\n.\n");
+    EXPECT_EQ(res, "5 ");
+}
