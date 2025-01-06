@@ -14,3 +14,16 @@ protected:
     std::size_t _depth;
 }; // class Div
 } // namespace frt
+
+
+
+namespace frt {
+class Mod : public Command {
+public:
+    Mod() : _depth(2) { }
+    ~Mod() override = default;
+    bool exec(ExecutionContext& context) override;
+protected:
+    std::size_t _depth;
+}; // class Div
+} // namespace frt

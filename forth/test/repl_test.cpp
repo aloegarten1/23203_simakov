@@ -69,6 +69,63 @@ TEST(REPL, MINUS_GOOD)
     EXPECT_EQ(res, "5");
 }
 
+
+
+TEST(REPL, MULT_BAD)
+{
+    std::string res = repl("2\n2\n*\n.\n");
+    EXPECT_NE(res, "44");
+}
+
+TEST(REPL, MULT_BAD_ES)
+{
+    std::string res = repl("55\n*\n");
+    EXPECT_EQ(res, "exec error: *\n");
+}
+
+TEST(REPL, MULT_GOOD)
+{
+    std::string res = repl("3\n3\n*\n.\n");
+    EXPECT_EQ(res, "9");
+}
+
+TEST(REPL, DIV_BAD)
+{
+    std::string res = repl("20\n20\n/\n.\n");
+    EXPECT_NE(res, "44");
+}
+
+TEST(REPL, DIV_BAD_ES)
+{
+    std::string res = repl("55\n/\n");
+    EXPECT_EQ(res, "exec error: /\n");
+}
+
+TEST(REPL, DIV_GOOD)
+{
+    std::string res = repl("5 -50 / .");
+    EXPECT_EQ(res, "-10");
+}
+
+TEST(REPL, MOD_BAD)
+{
+    std::string res = repl("20 20 mod .");
+    EXPECT_NE(res, "44");
+}
+
+TEST(REPL, MOD_BAD_ES)
+{
+    std::string res = repl("55 mod");
+    EXPECT_EQ(res, "exec error: mod\n");
+}
+
+TEST(REPL, MOD_GOOD)
+{
+    std::string res = repl("13 30 mod .");
+    EXPECT_EQ(res, "4");
+}
+
+
 // ref: https://docs.google.com/document/d/15ddUtdUvO8nRUtTUOUUR2OzP-fh3AZACDghveHQohJI/edit?tab=t.0
 TEST(REPL, CR)
 {

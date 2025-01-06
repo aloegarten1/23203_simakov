@@ -94,6 +94,7 @@ Mult::exec(ExecutionContext& context) {
 
     return true;
 }
+ 
 
 bool
 Div::exec(ExecutionContext& context) {
@@ -106,6 +107,21 @@ Div::exec(ExecutionContext& context) {
     context.popVal();
 
     context.pushVal(a / b);
+
+    return true;
+}
+
+bool
+Mod::exec(ExecutionContext& context) {
+    if (context.getStackDepth() < _depth) { return false; }
+    StackValue a, b;
+
+    a = context.getTopVal();
+    context.popVal();
+    b = context.getTopVal();
+    context.popVal();
+
+    context.pushVal(a % b);
 
     return true;
 }

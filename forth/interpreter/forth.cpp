@@ -45,6 +45,10 @@ namespace Commands {
         return std::make_shared<frt::Div>();
     }
 
+    std::shared_ptr<frt::Command> createMod() {
+        return std::make_shared<frt::Mod>();
+    }
+
     std::shared_ptr<frt::Command> createG() {
         return std::make_shared<frt::G>();
     }

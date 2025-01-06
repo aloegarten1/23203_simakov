@@ -22,6 +22,7 @@ namespace Commands
     std::shared_ptr<frt::Command> createSubtract();
     std::shared_ptr<frt::Command> createMult();
     std::shared_ptr<frt::Command> createDiv();
+    std::shared_ptr<frt::Command> createMod();
 
     std::shared_ptr<frt::Command> createG();
     std::shared_ptr<frt::Command> createL();
@@ -81,7 +82,7 @@ void Repl::run()
     }
 }
 
-bool Repl::readExpression(std::shared_ptr<frt::Expression>& e, std::string stop)
+bool Repl::readExpression(std::shared_ptr<frt::Expression> &e, std::string stop)
 {
     std::string word;
     std::shared_ptr<frt::Token> t;
@@ -152,14 +153,14 @@ bool Repl::readExpression(std::shared_ptr<frt::Expression>& e, std::string stop)
 
         if ("do" == word)
         {
-           // std::string name = "i";
-           // forth_.addVar(name, 0);
+            // std::string name = "i";
+            // forth_.addVar(name, 0);
             std::shared_ptr<frt::Expression> body;
             if (!readExpression(body, limiters[word]))
             {
                 return false;
             }
-           // forth_.deleteVar(name);
+            // forth_.deleteVar(name);
             t = std::make_shared<frt::DoLoop>(body);
             expr_.push_back(t);
         }
@@ -176,7 +177,7 @@ bool Repl::readExpression(std::shared_ptr<frt::Expression>& e, std::string stop)
     return true;
 }
 
-bool Repl::readToken(std::shared_ptr<frt::Token>& t)
+bool Repl::readToken(std::shared_ptr<frt::Token> &t)
 {
     std::string word;
     t = nullptr;
@@ -280,6 +281,7 @@ void Repl::loadCommands()
     f_->regist3r("-", Commands::createSubtract);
     f_->regist3r("*", Commands::createMult);
     f_->regist3r("/", Commands::createDiv);
+    f_->regist3r("mod", Commands::createMod);
 
     f_->regist3r(">", Commands::createG);
     f_->regist3r("<", Commands::createL);
@@ -319,6 +321,12 @@ bool Repl::isNumber(std::string word)
     for (std::size_t i = 0; i < word.length(); ++i)
     {
         if ((word[i] >= '0') && (word[i] <= '9'))
+        {
+            continue;
+        }
+
+        // negative
+        if (i == 0 && word.length()>1 && word[i] == '-')
         {
             continue;
         }
