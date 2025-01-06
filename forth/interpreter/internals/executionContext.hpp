@@ -26,7 +26,8 @@ public:
     size_t getStackDepth() const noexcept { return stack_.depth(); }
     bool isStackEmpty() const noexcept { return stack_.isEmpty(); }
 
-    void printStackVal(StackValue val) { output_ << val << " "; }
+    void printStackVal(StackValue val) { output_ << val; }
+    void print(std::string str) { output_ << str; }
     void println(std::string str) { output_ << str << '\n'; }
     void printChar(char c) { output_ << c << " "; }
     void printValAsChar(StackValue val) { output_ << char(val); }

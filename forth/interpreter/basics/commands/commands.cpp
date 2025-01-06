@@ -159,7 +159,6 @@ bool
 Dot::exec(ExecutionContext& context) {
     if (context.getStackDepth() < _depth) { return false; }
     context.printStackVal(context.getTopVal());
-//  context.println("");
     context.popVal();
     
     return true;

@@ -27,7 +27,7 @@ std::string repl(std::string input)
 TEST(REPL, PushOnePositiveNumber)
 {
     std::string res = repl("123\n.");
-    EXPECT_EQ(res, "123 ");
+    EXPECT_EQ(res, "123");
 }
 
 TEST(REPL, PLUS_BAD)
@@ -46,7 +46,7 @@ TEST(REPL, PLUS_GOOD)
 {
 
     std::string res = repl("2\n2\n+\n.\n");
-    EXPECT_EQ(res, "4 ");
+    EXPECT_EQ(res, "4");
 }
 
 
@@ -66,7 +66,7 @@ TEST(REPL, MINUS_GOOD)
 {
 
     std::string res = repl("5\n10\n-\n.\n");
-    EXPECT_EQ(res, "5 ");
+    EXPECT_EQ(res, "5");
 }
 
 // ref: https://docs.google.com/document/d/15ddUtdUvO8nRUtTUOUUR2OzP-fh3AZACDghveHQohJI/edit?tab=t.0
