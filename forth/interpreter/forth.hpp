@@ -10,23 +10,18 @@ class Forth {
 public:
     Forth() = default;
     Forth(std::ostream& output) : context_(output) {}
-    ~Forth() {
-        for (auto word: words_){
-            delete word.second;
-            words_.erase(word.first);
-        };
-    }
+    ~Forth() = default;
 
-    bool execToken(Token * token);
+    bool execToken(Token * t);
     void printStack() { context_.printStack(); }
 
-    void defineWord(std::string& name, Expression *expr) {
+    void defineWord(std::string& name, std::shared_ptr<Expression> expr) {
         words_.insert(
-            std::pair<std::string, Expression*>({name, expr})
+            std::pair<std::string, std::shared_ptr<Expression>>({name, expr})
         );
     }
 
-    Expression* getDefinition(std::string& name) {
+    std::shared_ptr<Expression> getDefinition(std::string& name) {
         return words_.find(name)->second;
     } 
 
@@ -60,7 +55,7 @@ public:
 private:
     ExecutionContext context_;
 
-    std::map<std::string, Expression*> words_;
+    std::map<std::string, std::shared_ptr<Expression>> words_;
 }; // class Forth
 
 } // namespace frt

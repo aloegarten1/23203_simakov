@@ -5,8 +5,8 @@
 namespace frt {
 class IfThen : public Token {
 public:
-    IfThen(Expression * e) : expr_(e) {}
-    virtual ~IfThen() { delete expr_; }
+    IfThen(std::shared_ptr<Expression> e) : expr_(e) {}
+    virtual ~IfThen() = default;
 
     virtual bool exec(ExecutionContext& context) {
         if (context.getStackDepth() < 1) { return false; }
@@ -19,6 +19,6 @@ public:
         return true;
     }
 private:
-    Expression * expr_;
+    std::shared_ptr<Expression> expr_;
 }; // class IfThen
 } // namespace frt

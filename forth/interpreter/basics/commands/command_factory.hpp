@@ -3,6 +3,7 @@
 #include <cassert>
 #include <iostream>
 #include <map>
+#include <memory>
 
 namespace frt {
 
@@ -14,7 +15,7 @@ public:
         return &f;
     }
 
-    [[nodiscard]] Product * createCommandByName(const Id& name) const {
+    [[nodiscard]] std::shared_ptr<Product> createCommandByName(const Id& name) const {
         auto it = creators_.find(name);
         if (it != creators_.end()) {
             return it->second();

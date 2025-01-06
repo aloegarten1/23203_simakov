@@ -13,6 +13,7 @@ public:
     {
         init();
     }
+
     Repl(std::istream &stream) : input_(stream), output_(std::cout) 
     {
         init();
@@ -29,22 +30,22 @@ private:
     frt::Forth forth_;
     std::vector<char> seps = {' ', '\t', '\n'};
 
-    using CommandFactory = frt::CommandFactory<frt::Command, std::string, frt::Command *(*)()>;
+    using CommandFactory = frt::CommandFactory<frt::Command, std::string, std::shared_ptr<frt::Command>(*)()>;
     CommandFactory *f_ = CommandFactory::getInstance();
 
 private:
     void loadCommands();
 
     bool readWord(std::string &dst);
-    bool readToken(frt::Token *&t);
+    bool readToken(std::shared_ptr<frt::Token>& t);
     bool readAndEvalToken();
-    bool readExpression(frt::Expression *&e, std::string stop);
+    bool readExpression(std::shared_ptr<frt::Expression>& e, std::string stop);
     // bool readExpression(frt::Expression **e, std::string stop);
 
     char skipSeps(std::vector<char> seps);
     bool isValid(std::string word);
     bool isNumber(std::string word);
-    bool isBasicToken(std::string &word, frt::Token *&t);
+    bool isBasicToken(std::string &word, std::shared_ptr<frt::Token>& t);
     void init();
 
 };

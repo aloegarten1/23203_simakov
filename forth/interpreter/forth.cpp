@@ -1,66 +1,64 @@
 #include "forth.hpp"
 
-//#include <memory>
-
 namespace Commands {
-    frt::Command * createAdd() {
-        return new frt::Add();
+    std::shared_ptr<frt::Command> createAdd() {
+        return std::make_shared<frt::Add>();
     }
 
-    frt::Command * createDup() {
-        return new frt::Dup();
+    std::shared_ptr<frt::Command> createDup() {
+        return std::make_shared<frt::Dup>();
     }
 
-    frt::Command * createDrop() {
-        return new frt::Drop();
+    std::shared_ptr<frt::Command> createDrop() {
+        return std::make_shared<frt::Drop>();
     }
 
-    frt::Command * createSwap() {
-        return new frt::Swap();
+    std::shared_ptr<frt::Command> createSwap() {
+        return std::make_shared<frt::Swap>();
     }
 
-    frt::Command * createRot() {
-        return new frt::Rot();
+    std::shared_ptr<frt::Command> createRot() {
+        return std::make_shared<frt::Rot>();
     }
 
-    frt::Command * createOver() {
-        return new frt::Over();
+    std::shared_ptr<frt::Command> createOver() {
+        return std::make_shared<frt::Over>();
     }
 
-    frt::Command * createDot() {
-        return new frt::Dot();
+    std::shared_ptr<frt::Command> createDot() {
+        return std::make_shared<frt::Dot>();
     }
 
-    frt::Command * createEmit() {
-        return new frt::Emit();
+    std::shared_ptr<frt::Command> createEmit() {
+        return std::make_shared<frt::Emit>();
     }
 
-    frt::Command * createSubtract() {
-        return new frt::Subtract();
+    std::shared_ptr<frt::Command> createSubtract() {
+        return std::make_shared<frt::Subtract>();
     }
 
-    frt::Command * createMult() {
-        return new frt::Mult();
+    std::shared_ptr<frt::Command> createMult() {
+        return std::make_shared<frt::Mult>();
     }
 
-    frt::Command * createDiv() {
-        return new frt::Div();
+    std::shared_ptr<frt::Command> createDiv() {
+        return std::make_shared<frt::Div>();
     }
 
-    frt::Command * createG() {
-        return new frt::G();
+    std::shared_ptr<frt::Command> createG() {
+        return std::make_shared<frt::G>();
     }
 
-    frt::Command * createL() {
-        return new frt::L();
+    std::shared_ptr<frt::Command> createL() {
+        return std::make_shared<frt::L>();
     }
 
-    frt::Command * createEq() {
-        return new frt::Eq();
+    std::shared_ptr<frt::Command> createEq() {
+        return std::make_shared<frt::Eq>();
     }
 
-    frt::Command * createCr() {
-        return new frt::Cr();
+    std::shared_ptr<frt::Command> createCr() {
+        return std::make_shared<frt::Cr>();
     }
 
 }

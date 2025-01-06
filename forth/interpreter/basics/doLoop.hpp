@@ -9,11 +9,8 @@ namespace frt
     class DoLoop : public Token
     {
     public:
-        DoLoop(Expression *e) : expr_(e) {}
-        virtual ~DoLoop()
-        {
-            delete expr_;
-        }
+        DoLoop(std::shared_ptr<Expression> e) : expr_(e) {}
+        virtual ~DoLoop() = default;
 
         virtual bool exec(ExecutionContext &context)
         {
@@ -69,7 +66,7 @@ namespace frt
         }
 
     private:
-        Expression *expr_;
+        std::shared_ptr<Expression> expr_;
     }; // class DoLoop
 
     class DoLoopIterator : public Token

@@ -18,25 +18,25 @@ namespace
 
 namespace Commands
 {
-    frt::Command *createAdd();
-    frt::Command *createSubtract();
-    frt::Command *createMult();
-    frt::Command *createDiv();
+    std::shared_ptr<frt::Command> createAdd();
+    std::shared_ptr<frt::Command> createSubtract();
+    std::shared_ptr<frt::Command> createMult();
+    std::shared_ptr<frt::Command> createDiv();
 
-    frt::Command *createG();
-    frt::Command *createL();
-    frt::Command *createEq();
+    std::shared_ptr<frt::Command> createG();
+    std::shared_ptr<frt::Command> createL();
+    std::shared_ptr<frt::Command> createEq();
 
-    frt::Command *createDup();
-    frt::Command *createDrop();
-    frt::Command *createRot();
-    frt::Command *createSwap();
-    frt::Command *createOver();
+    std::shared_ptr<frt::Command> createDup();
+    std::shared_ptr<frt::Command> createDrop();
+    std::shared_ptr<frt::Command> createRot();
+    std::shared_ptr<frt::Command> createSwap();
+    std::shared_ptr<frt::Command> createOver();
 
-    frt::Command *createDot();
-    frt::Command *createEmit();
+    std::shared_ptr<frt::Command> createDot();
+    std::shared_ptr<frt::Command> createEmit();
 
-    frt::Command *createCr();
+    std::shared_ptr<frt::Command> createCr();
 
 }
 
@@ -61,7 +61,7 @@ void Repl::run()
         output_ << "Welcome to FORTH REPL mode." << std::endl;
     }
 
-    frt::Token *t;
+    std::shared_ptr<frt::Token> t;
 
     while (true)
     {
@@ -81,11 +81,11 @@ void Repl::run()
     }
 }
 
-bool Repl::readExpression(frt::Expression *&e, std::string stop)
+bool Repl::readExpression(std::shared_ptr<frt::Expression>& e, std::string stop)
 {
     std::string word;
-    frt::Token *t;
-    std::vector<frt::Token *> expr_;
+    std::shared_ptr<frt::Token> t;
+    std::vector<std::shared_ptr<frt::Token>> expr_;
 
     while (word != stop)
     {
@@ -98,7 +98,7 @@ bool Repl::readExpression(frt::Expression *&e, std::string stop)
 
         if (word == stop)
         {
-            e = new frt::Expression(expr_);
+            e = std::make_shared<frt::Expression>(expr_);
             return true;
         }
         if ("" == word)
@@ -131,7 +131,7 @@ bool Repl::readExpression(frt::Expression *&e, std::string stop)
                 throw ForthError("readExpression error: Double definition of " + name);
             }
 
-            frt::Expression *e;
+            std::shared_ptr<frt::Expression> e;
             if (!readExpression(e, limiters[word]))
             {
                 return false;
@@ -141,12 +141,12 @@ bool Repl::readExpression(frt::Expression *&e, std::string stop)
 
         if ("if" == word)
         {
-            frt::Expression *body;
+            std::shared_ptr<frt::Expression> body;
             if (!readExpression(body, limiters[word]))
             {
                 return false;
             }
-            t = new frt::IfThen(body);
+            t = std::make_shared<frt::IfThen>(body);
             expr_.push_back(t);
         }
 
@@ -154,19 +154,19 @@ bool Repl::readExpression(frt::Expression *&e, std::string stop)
         {
            // std::string name = "i";
            // forth_.addVar(name, 0);
-            frt::Expression *body;
+            std::shared_ptr<frt::Expression> body;
             if (!readExpression(body, limiters[word]))
             {
                 return false;
             }
            // forth_.deleteVar(name);
-            t = new frt::DoLoop(body);
+            t = std::make_shared<frt::DoLoop>(body);
             expr_.push_back(t);
         }
 
         if ("i" == word)
         {
-            t = new frt::DoLoopIterator();
+            t = std::make_shared<frt::DoLoopIterator>();
             expr_.push_back(t);
         }
 
@@ -176,7 +176,7 @@ bool Repl::readExpression(frt::Expression *&e, std::string stop)
     return true;
 }
 
-bool Repl::readToken(frt::Token *&t)
+bool Repl::readToken(std::shared_ptr<frt::Token>& t)
 {
     std::string word;
     t = nullptr;
@@ -201,14 +201,9 @@ bool Repl::readToken(frt::Token *&t)
 
     if (isBasicToken(word, t))
     {
-        if (!forth_.execToken(t))
+        if (!forth_.execToken(t.get()))
         {
-            delete t;
             throw ForthError("exec error: " + word);
-        }
-        if (!forth_.isWordDefined(word))
-        {
-            delete t;
         }
         return true;
     }
@@ -230,7 +225,7 @@ bool Repl::readToken(frt::Token *&t)
             throw ForthError("ERROR: Double definition of: " + name);
         }
 
-        frt::Expression *e;
+        std::shared_ptr<frt::Expression> e;
         bool res = readExpression(e, limiters[word]);
         if (res)
         {
@@ -242,7 +237,7 @@ bool Repl::readToken(frt::Token *&t)
     throw ForthError("undefined behavior ");
 }
 
-bool Repl::isBasicToken(std::string &word, frt::Token *&t)
+bool Repl::isBasicToken(std::string &word, std::shared_ptr<frt::Token> &t)
 {
 #if defined(DEBUG)
     output_ << word << std::endl;
@@ -251,7 +246,7 @@ bool Repl::isBasicToken(std::string &word, frt::Token *&t)
     if (isNumber(word))
     {
         frt::StackValue val = atoi(word.c_str());
-        t = new frt::ValueToken(val);
+        t = std::make_shared<frt::ValueToken>(val);
 
         return true;
     }
@@ -271,7 +266,7 @@ bool Repl::isBasicToken(std::string &word, frt::Token *&t)
     if (forth_.isVarDefined(word))
     {
         std::cout << "VAR" << std::endl;
-        t = new frt::Var(word);
+        t = std::make_shared<frt::Var>(word);
 
         return true;
     }
