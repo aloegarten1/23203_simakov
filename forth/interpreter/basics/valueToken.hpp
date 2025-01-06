@@ -5,7 +5,7 @@
 
 namespace frt {
 
-class ValueToken : public Token{
+class ValueToken : public Token {
 public:
     ValueToken() : val_(0) {}
     ValueToken(StackValue val) : val_(val) {}

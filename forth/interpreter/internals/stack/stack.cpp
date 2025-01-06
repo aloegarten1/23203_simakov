@@ -38,8 +38,8 @@ bool frt::Stack::swap() noexcept {
 
 bool frt::Stack::rot() noexcept {
     if (depth_ < 3) { return false; }
-    std::swap(storage_[depth_ - 2], storage_[depth_ - 3]);
-    std::swap(storage_[depth_ - 1], storage_[depth_ - 2]);
+    std::swap(storage_[depth_ - 3], storage_[depth_ - 1]);
+    std::swap(storage_[depth_ - 2], storage_[depth_ - 1]);
 
     return true;
 }

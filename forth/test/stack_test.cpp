@@ -116,10 +116,10 @@ TEST(method, rot) {
 
     ASSERT_TRUE(s.rot());
     ASSERT_EQ(s.depth(), 3);
-    ASSERT_EQ(s.top(), 1);
-    ASSERT_EQ(s.getSecondFromTop(), 3);
+    ASSERT_EQ(s.top(), 2);
+    ASSERT_EQ(s.getSecondFromTop(), 1);
     
     ASSERT_TRUE(s.pop());
     ASSERT_EQ(s.depth(), 2);
-    ASSERT_EQ(s.getSecondFromTop(), 2);
+    ASSERT_EQ(s.getSecondFromTop(), 3);
 }

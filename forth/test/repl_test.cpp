@@ -76,3 +76,54 @@ TEST(REPL, CR)
     std::string res = repl("100 200 . cr .");
     EXPECT_EQ(res, "200\n100");
 }
+
+
+TEST(REPL, DUP)
+{
+
+    std::string res = repl("100 200 dup . cr . cr .");
+    EXPECT_EQ(res, "200\n200\n100");
+}
+
+
+TEST(REPL, DROP)
+{
+
+    std::string res = repl("100 150 200 drop . cr .");
+    EXPECT_EQ(res, "150\n100");
+}
+
+
+TEST(REPL, SWAP)
+{
+
+    std::string res = repl("13 17 19 swap . . .");
+    EXPECT_EQ(res, "171913");
+}
+
+
+
+TEST(REPL, ROT)
+{
+
+    std::string res = repl("4 1 2 3 rot . . . .");
+    EXPECT_EQ(res, "2134");
+}
+
+TEST(REPL, OVER)
+{
+
+    std::string res = repl("3 2 1 over . . . .");
+    EXPECT_EQ(res, "2123");
+}
+
+
+
+TEST(REPL, EMIT)
+{
+
+    std::string res = repl("65 emit");
+    EXPECT_EQ(res, "A");
+}
+
+
