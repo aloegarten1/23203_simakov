@@ -47,7 +47,7 @@ add_executable(
   test/FORTH_basic_test.cpp
   test/FORTH_math_test.cpp
   test/FORTH_logic_test.cpp
-  
+  test/FORTH_control_test.cpp
   interpreter/internals/stack/stack.cpp
   interpreter/internals/stack/stack.hpp
   interpreter/forth.cpp
