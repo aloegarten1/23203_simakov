@@ -1,48 +1,23 @@
 #include "../io/repl.hpp"
-
+#include "repl.hpp"
 #include <gtest/gtest.h>
 
 using namespace std;
+ 
 
-/*
-
-Repl MockRepl(std::string input, std::ostream &os)
-{
-
-    std::istringstream is(input);
-    return Repl(is, os);
-}
-
-*/
-
-std::string repl(std::string input)
-{
-    std::ostringstream os;
-    std::istringstream is(input);
-    Repl repl = Repl(is, os);
-    repl.run();
-    return os.str();
-}
-
-TEST(REPL, PushOnePositiveNumber)
-{
-    std::string res = repl("123\n.");
-    EXPECT_EQ(res, "123");
-}
-
-TEST(REPL, PLUS_BAD)
+TEST(FORTH_MATH, PLUS_BAD)
 {
     std::string res = repl("2\n2\n+\n.\n");
     EXPECT_NE(res, "44");
 }
 
-TEST(REPL, PLUS_BAD_ES)
+TEST(FORTH_MATH, PLUS_BAD_ES)
 {
     std::string res = repl("55\n+\n");
     EXPECT_EQ(res, "exec error: +\n");
 }
 
-TEST(REPL, PLUS_GOOD)
+TEST(FORTH_MATH, PLUS_GOOD)
 {
 
     std::string res = repl("2\n2\n+\n.\n");
@@ -50,33 +25,33 @@ TEST(REPL, PLUS_GOOD)
 }
 
 
-TEST(REPL, MINUS_BAD)
+TEST(FORTH_MATH, MINUS_BAD)
 {
     std::string res = repl("2\n2\n-\n.\n");
     EXPECT_NE(res, "44");
 }
 
-TEST(REPL, MINUS_BAD_ES)
+TEST(FORTH_MATH, MINUS_BAD_ES)
 {
     std::string res = repl("55\n-\n");
     EXPECT_EQ(res, "exec error: -\n");
 }
 
-TEST(REPL, MINUS_GOOD_1)
+TEST(FORTH_MATH, MINUS_GOOD_1)
 {
 
     std::string res = repl("100 40 - .");
     EXPECT_EQ(res, "60");
 }
 
-TEST(REPL, MINUS_GOOD_2)
+TEST(FORTH_MATH, MINUS_GOOD_2)
 {
 
     std::string res = repl("40 60 - .");
     EXPECT_EQ(res, "-20");
 }
 
-TEST(REPL, MINUS_GOOD_3)
+TEST(FORTH_MATH, MINUS_GOOD_3)
 {
 
     std::string res = repl("-5 -3 - .");
@@ -85,146 +60,87 @@ TEST(REPL, MINUS_GOOD_3)
 
 
 
-TEST(REPL, MULT_BAD)
+TEST(FORTH_MATH, MULT_BAD)
 {
     std::string res = repl("2\n2\n*\n.\n");
     EXPECT_NE(res, "44");
 }
 
-TEST(REPL, MULT_BAD_ES)
+TEST(FORTH_MATH, MULT_BAD_ES)
 {
     std::string res = repl("55\n*\n");
     EXPECT_EQ(res, "exec error: *\n");
 }
 
-TEST(REPL, MULT_GOOD)
+TEST(FORTH_MATH, MULT_GOOD)
 {
     std::string res = repl("3\n3\n*\n.\n");
     EXPECT_EQ(res, "9");
 }
 
-TEST(REPL, DIV_BAD)
+TEST(FORTH_MATH, DIV_BAD)
 {
     std::string res = repl("20\n20\n/\n.\n");
     EXPECT_NE(res, "44");
 }
 
-TEST(REPL, DIV_BAD_ES)
+TEST(FORTH_MATH, DIV_BAD_ES)
 {
     std::string res = repl("55\n/\n");
     EXPECT_EQ(res, "exec error: /\n");
 }
 
-TEST(REPL, DIV_GOOD_1)
+TEST(FORTH_MATH, DIV_GOOD_1)
 {
     std::string res = repl("4 -2 / .");
     EXPECT_EQ(res, "-2");
 }
 
-TEST(REPL, DIV_GOOD_2)
+TEST(FORTH_MATH, DIV_GOOD_2)
 {
     std::string res = repl("4 4 / .");
     EXPECT_EQ(res, "1");
 }
 
-TEST(REPL, DIV_GOOD_3)
+TEST(FORTH_MATH, DIV_GOOD_3)
 {
     std::string res = repl("4 5 / .");
     EXPECT_EQ(res, "0");
 }
 
-TEST(REPL, DIV_ZERO_1)
+TEST(FORTH_MATH, DIV_ZERO_1)
 {
     std::string res = repl("0 2025 / .");
     EXPECT_EQ(res, "0");
 }
 
-TEST(REPL, DIV_ZERO_2)
+TEST(FORTH_MATH, DIV_ZERO_2)
 {
     std::string res = repl("2025 0 /");
     EXPECT_EQ(res, "Division by zero\n");
 }
 
-TEST(REPL, MOD_BAD)
+TEST(FORTH_MATH, MOD_BAD)
 {
     std::string res = repl("20 20 mod .");
     EXPECT_NE(res, "44");
 }
 
-TEST(REPL, MOD_BAD_ES)
+TEST(FORTH_MATH, MOD_BAD_ES)
 {
     std::string res = repl("55 mod");
     EXPECT_EQ(res, "exec error: mod\n");
 }
 
-TEST(REPL, MOD_GOOD)
+TEST(FORTH_MATH, MOD_GOOD)
 {
     std::string res = repl("30 13 mod .");
     EXPECT_EQ(res, "4");
 }
 
-TEST(REPL, MOD_ZERO)
+TEST(FORTH_MATH, MOD_ZERO)
 {
     std::string res = repl("2025 0 mod");
     EXPECT_EQ(res, "Division by zero\n");
 }
-
-
-// ref: https://docs.google.com/document/d/15ddUtdUvO8nRUtTUOUUR2OzP-fh3AZACDghveHQohJI/edit?tab=t.0
-TEST(REPL, CR)
-{
-
-    std::string res = repl("100 200 . cr .");
-    EXPECT_EQ(res, "200\n100");
-}
-
-
-TEST(REPL, DUP)
-{
-
-    std::string res = repl("100 200 dup . cr . cr .");
-    EXPECT_EQ(res, "200\n200\n100");
-}
-
-
-TEST(REPL, DROP)
-{
-
-    std::string res = repl("100 150 200 drop . cr .");
-    EXPECT_EQ(res, "150\n100");
-}
-
-
-TEST(REPL, SWAP)
-{
-
-    std::string res = repl("13 17 19 swap . . .");
-    EXPECT_EQ(res, "171913");
-}
-
-
-
-TEST(REPL, ROT)
-{
-
-    std::string res = repl("4 1 2 3 rot . . . .");
-    EXPECT_EQ(res, "2134");
-}
-
-TEST(REPL, OVER)
-{
-
-    std::string res = repl("3 2 1 over . . . .");
-    EXPECT_EQ(res, "2123");
-}
-
-
-
-TEST(REPL, EMIT)
-{
-
-    std::string res = repl("65 emit");
-    EXPECT_EQ(res, "A");
-}
-
 
