@@ -152,12 +152,21 @@ bool Repl::readExpression(frt::Expression *&e, std::string stop)
 
         if ("do" == word)
         {
+           // std::string name = "i";
+           // forth_.addVar(name, 0);
             frt::Expression *body;
             if (!readExpression(body, limiters[word]))
             {
                 return false;
             }
+           // forth_.deleteVar(name);
             t = new frt::DoLoop(body);
+            expr_.push_back(t);
+        }
+
+        if ("i" == word)
+        {
+            t = new frt::DoLoopIterator();
             expr_.push_back(t);
         }
 
@@ -235,6 +244,10 @@ bool Repl::readToken(frt::Token *&t)
 
 bool Repl::isBasicToken(std::string &word, frt::Token *&t)
 {
+#if defined(DEBUG)
+    output_ << word << std::endl;
+#endif
+
     if (isNumber(word))
     {
         frt::StackValue val = atoi(word.c_str());
@@ -257,8 +270,8 @@ bool Repl::isBasicToken(std::string &word, frt::Token *&t)
 
     if (forth_.isVarDefined(word))
     {
-        frt::StackValue val = forth_.getVarVal(word);
-        t = new frt::ValueToken(val);
+        std::cout << "VAR" << std::endl;
+        t = new frt::Var(word);
 
         return true;
     }
@@ -287,7 +300,6 @@ void Repl::loadCommands()
     f_->regist3r("emit", Commands::createEmit);
 
     f_->regist3r("cr", Commands::createCr);
-
 }
 
 bool Repl::isValid(std::string word)
@@ -346,20 +358,20 @@ bool Repl::readWord(std::string &dst)
     }
     catch (const std::exception &e)
     {
-        std::cerr << e.what() << '\n';
+        output_ << e.what() << '\n';
         return false;
     }
 
     char c;
 
 #if defined(DEBUG)
-    std::cerr << "readWord debug 1 \n";
+    output_ << "readWord debug 1 \n";
 #endif
 
     this->input_.get(c);
 
 #if defined(DEBUG)
-    std::cerr << "readWord debug 2 " << c << " \n";
+    output_ << "readWord debug 2 " << c << " \n";
 #endif
 
     while (c <= ' ')
@@ -370,12 +382,12 @@ bool Repl::readWord(std::string &dst)
         }
 
 #if defined(DEBUG)
-        std::cerr << "readWord debug 3 \n";
+        output_ << "readWord debug 3 \n";
 #endif
         this->input_.get(c);
 
 #if defined(DEBUG)
-        std::cerr << "readWord debug 4 " << c << " \n";
+        output_ << "readWord debug 4 " << c << " \n";
 #endif
     }
 
@@ -388,12 +400,12 @@ bool Repl::readWord(std::string &dst)
         dst += c;
 
 #if defined(DEBUG)
-        std::cerr << "readWord debug 5 \n";
+        output_ << "readWord debug 5 \n";
 #endif
         this->input_.get(c);
 
 #if defined(DEBUG)
-        std::cerr << "readWord debug 6 " << c << " \n";
+        output_ << "readWord debug 6 " << c << " \n";
 #endif
     }
 

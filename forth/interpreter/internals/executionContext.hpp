@@ -42,6 +42,9 @@ public:
             return false;
         }
         vars_[name] = val;
+        #if defined(DEBUG)
+            output_ << "SETTED: " << name << " = " << val << std::endl;;
+        #endif
         return true;
     }
     
@@ -53,6 +56,9 @@ public:
         vars_.insert(
             std::pair<std::string, StackValue>({name, val})
         );
+#if defined(DEBUG)
+        output_ << "DEFINED: " << name << " = " << val <<  std::endl;
+#endif        
     }
 
     void deleteVar(std::string name) {

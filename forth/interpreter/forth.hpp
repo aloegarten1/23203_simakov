@@ -10,7 +10,12 @@ class Forth {
 public:
     Forth() = default;
     Forth(std::ostream& output) : context_(output) {}
-    ~Forth() = default;
+    ~Forth() {
+        for (auto word: words_){
+            delete word.second;
+            words_.erase(word.first);
+        };
+    }
 
     bool execToken(Token * token);
     void printStack() { context_.printStack(); }
@@ -43,6 +48,13 @@ public:
 
     void addVar(std::string name, StackValue val) {
         context_.addVar(name, val);
+    }
+
+    bool deleteVar(std::string& name) {
+        if (!isVarDefined(name)) { return false; }
+        context_.deleteVar(name);
+
+        return true;
     }
 
 private:

@@ -12,7 +12,11 @@ public:
     Expression(Expression& e) : expr_(e.expr_) {}
 
     virtual ~Expression() {
-        for (auto t : expr_) { delete t; }
+        for (auto t : expr_) { 
+            if (t) {
+                delete t;
+            } 
+        }
     }
     
     virtual bool exec(ExecutionContext& context) {

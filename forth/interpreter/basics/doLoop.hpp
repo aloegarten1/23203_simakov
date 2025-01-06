@@ -3,46 +3,89 @@
 #include "expression.hpp"
 #include <iostream>
 
-namespace frt {
+namespace frt
+{
 
-class DoLoop : public Token {
-public:
-    DoLoop(Expression * e) : expr_(e) {}
-    virtual ~DoLoop() {
-        delete expr_;
-    }
-
-    virtual bool exec(ExecutionContext& context) {
-        StackValue i, lim, prevI = -1;
-
-        if (context.getStackDepth() < 2) { return false; }
-        i = context.getTopVal();
-        context.popVal();
-        lim = context.getTopVal();
-        context.popVal();
-
-        std::string iName = std::string("i");
-        if (!context.isVarDefined(iName)) {
-            context.addVar(iName, i);
-            std::cout << "DEFINED I" << std::endl;
-        }
-        else {
-            prevI = context.getVarVal(iName);
-            context.setVarVal(iName, i);
-        }
-        
-        std::cout << "ALARM " << i << std::endl;
-        for (StackValue i_ = i ; i_ < lim ; ++i_) {
-            if (!expr_->exec(context)) { return false; }
-            context.setVarVal(iName, i_ + 1);
+    class DoLoop : public Token
+    {
+    public:
+        DoLoop(Expression *e) : expr_(e) {}
+        virtual ~DoLoop()
+        {
+            delete expr_;
         }
 
-        if (prevI >= 0) { context.setVarVal(iName, prevI); }
-        else { context.deleteVar(iName); }
+        virtual bool exec(ExecutionContext &context)
+        {
+            StackValue i, lim, prevI = -1;
 
-        return true;
-    }
-private:
-    Expression * expr_;
-}; // class DoLoop
+            if (context.getStackDepth() < 2)
+            {
+                return false;
+            }
+            i = context.getTopVal();
+            context.popVal();
+            lim = context.getTopVal();
+            context.popVal();
+
+            std::string iName = std::string("i");
+            if (!context.isVarDefined(iName))
+            {
+                context.addVar(iName, i);
+
+#if defined(DEBUG)
+                context.println("DEFINED I");
+#endif
+            }
+            else
+            {
+                prevI = context.getVarVal(iName);
+                context.setVarVal(iName, i);
+            }
+
+#if defined(DEBUG)
+            context.println("ALARM ");
+            context.printStackVal(i);
+#endif
+            for (StackValue i_ = i; i_ < lim; ++i_)
+            {
+                if (!expr_->exec(context))
+                {
+                    return false;
+                }
+                context.setVarVal(iName, i_ + 1);
+            }
+
+            if (prevI >= 0)
+            {
+                context.setVarVal(iName, prevI);
+            }
+            else
+            {
+                context.deleteVar(iName);
+            }
+
+            return true;
+        }
+
+    private:
+        Expression *expr_;
+    }; // class DoLoop
+
+    class DoLoopIterator : public Token
+    {
+    public:
+        DoLoopIterator() = default;
+        virtual ~DoLoopIterator() = default;
+        virtual bool exec(ExecutionContext &context)
+        {
+
+            std::string iName = std::string("i");
+
+            auto val = context.getVarVal(iName);
+            context.pushVal(val);
+            return true;
+        };
+    }; // class DoLoopIterator
+
 } // namespace frt

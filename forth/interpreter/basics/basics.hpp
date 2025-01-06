@@ -1,6 +1,7 @@
 #pragma once
 
 #include "valueToken.hpp"
+#include "var.hpp"
 
 #include "commands/add.hpp"
 #include "commands/div.hpp"
