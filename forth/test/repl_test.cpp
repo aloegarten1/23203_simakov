@@ -62,11 +62,25 @@ TEST(REPL, MINUS_BAD_ES)
     EXPECT_EQ(res, "exec error: -\n");
 }
 
-TEST(REPL, MINUS_GOOD)
+TEST(REPL, MINUS_GOOD_1)
 {
 
-    std::string res = repl("5\n10\n-\n.\n");
-    EXPECT_EQ(res, "5");
+    std::string res = repl("100 40 - .");
+    EXPECT_EQ(res, "60");
+}
+
+TEST(REPL, MINUS_GOOD_2)
+{
+
+    std::string res = repl("40 60 - .");
+    EXPECT_EQ(res, "-20");
+}
+
+TEST(REPL, MINUS_GOOD_3)
+{
+
+    std::string res = repl("-5 -3 - .");
+    EXPECT_EQ(res, "-2");
 }
 
 
@@ -101,10 +115,34 @@ TEST(REPL, DIV_BAD_ES)
     EXPECT_EQ(res, "exec error: /\n");
 }
 
-TEST(REPL, DIV_GOOD)
+TEST(REPL, DIV_GOOD_1)
 {
-    std::string res = repl("5 -50 / .");
-    EXPECT_EQ(res, "-10");
+    std::string res = repl("4 -2 / .");
+    EXPECT_EQ(res, "-2");
+}
+
+TEST(REPL, DIV_GOOD_2)
+{
+    std::string res = repl("4 4 / .");
+    EXPECT_EQ(res, "1");
+}
+
+TEST(REPL, DIV_GOOD_3)
+{
+    std::string res = repl("4 5 / .");
+    EXPECT_EQ(res, "0");
+}
+
+TEST(REPL, DIV_ZERO_1)
+{
+    std::string res = repl("0 2025 / .");
+    EXPECT_EQ(res, "0");
+}
+
+TEST(REPL, DIV_ZERO_2)
+{
+    std::string res = repl("2025 0 /");
+    EXPECT_EQ(res, "Division by zero\n");
 }
 
 TEST(REPL, MOD_BAD)
@@ -121,8 +159,14 @@ TEST(REPL, MOD_BAD_ES)
 
 TEST(REPL, MOD_GOOD)
 {
-    std::string res = repl("13 30 mod .");
+    std::string res = repl("30 13 mod .");
     EXPECT_EQ(res, "4");
+}
+
+TEST(REPL, MOD_ZERO)
+{
+    std::string res = repl("2025 0 mod");
+    EXPECT_EQ(res, "Division by zero\n");
 }
 
 

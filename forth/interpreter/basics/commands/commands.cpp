@@ -13,6 +13,7 @@
 #include "swap.hpp"
 #include "rot.hpp"
 #include "over.hpp"
+#include "../errors.hpp"
 
 using namespace frt;
 
@@ -68,14 +69,14 @@ Add::exec(ExecutionContext& context) {
 bool
 Subtract::exec(ExecutionContext& context) {
     if (context.getStackDepth() < _depth) { return false; }
-    StackValue a, b;
+    StackValue right, left;
 
-    a = context.getTopVal();
+    right = context.getTopVal();
     context.popVal();
-    b = context.getTopVal();
+    left = context.getTopVal();
     context.popVal();
 
-    context.pushVal(a - b);
+    context.pushVal(left - right);
 
     return true;
 }
@@ -99,14 +100,18 @@ Mult::exec(ExecutionContext& context) {
 bool
 Div::exec(ExecutionContext& context) {
     if (context.getStackDepth() < _depth) { return false; }
-    StackValue a, b;
+    StackValue right, left;
 
-    a = context.getTopVal();
+    right = context.getTopVal();
     context.popVal();
-    b = context.getTopVal();
+    left = context.getTopVal();
     context.popVal();
 
-    context.pushVal(a / b);
+    if (right == 0){
+        throw ForthError("Division by zero");
+    }
+
+    context.pushVal(left / right);
 
     return true;
 }
@@ -114,14 +119,18 @@ Div::exec(ExecutionContext& context) {
 bool
 Mod::exec(ExecutionContext& context) {
     if (context.getStackDepth() < _depth) { return false; }
-    StackValue a, b;
+    StackValue right, left;
 
-    a = context.getTopVal();
+    right = context.getTopVal();
     context.popVal();
-    b = context.getTopVal();
+    left = context.getTopVal();
     context.popVal();
 
-    context.pushVal(a % b);
+    if (right == 0){
+        throw ForthError("Division by zero");
+    }
+
+    context.pushVal(left % right);
 
     return true;
 }
