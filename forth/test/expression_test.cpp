@@ -1,5 +1,5 @@
 #include "../interpreter/basics/expression.hpp"
-#include "../interpreter/basics/tokens.hpp"
+#include "../interpreter/basics/basics.hpp"
 
 #include <gtest/gtest.h>
 

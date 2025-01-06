@@ -58,6 +58,11 @@ namespace Commands {
     frt::Command * createEq() {
         return new frt::Eq();
     }
+
+    frt::Command * createCr() {
+        return new frt::Cr();
+    }
+
 }
 
 namespace frt {

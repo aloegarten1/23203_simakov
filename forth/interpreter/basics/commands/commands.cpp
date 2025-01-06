@@ -9,6 +9,7 @@
 #include "l.hpp"
 #include "mult.hpp"
 #include "subtract.hpp"
+#include "cr.hpp"
 #include "swap.hpp"
 #include "rot.hpp"
 #include "over.hpp"
@@ -170,5 +171,11 @@ Emit::exec(ExecutionContext& context) {
     context.printChar(char(context.getTopVal()));
     context.popVal();
 
+    return true;
+}
+
+bool
+Cr::exec(ExecutionContext& context) {
+    context.println("");
     return true;
 }

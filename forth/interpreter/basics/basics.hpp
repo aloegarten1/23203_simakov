@@ -16,6 +16,7 @@
 #include "commands/rot.hpp"
 #include "commands/subtract.hpp"
 #include "commands/swap.hpp"
+#include "commands/cr.hpp"
 
 #include "doLoop.hpp"
 #include "ifThen.hpp"

@@ -68,3 +68,11 @@ TEST(REPL, MINUS_GOOD)
     std::string res = repl("5\n10\n-\n.\n");
     EXPECT_EQ(res, "5 ");
 }
+
+// ref: https://docs.google.com/document/d/15ddUtdUvO8nRUtTUOUUR2OzP-fh3AZACDghveHQohJI/edit?tab=t.0
+TEST(REPL, CR)
+{
+
+    std::string res = repl("100 200 . cr .");
+    EXPECT_EQ(res, "200\n100");
+}

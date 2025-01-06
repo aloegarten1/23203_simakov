@@ -35,6 +35,9 @@ namespace Commands
 
     frt::Command *createDot();
     frt::Command *createEmit();
+
+    frt::Command *createCr();
+
 }
 
 void Repl::init()
@@ -282,6 +285,9 @@ void Repl::loadCommands()
 
     f_->regist3r(".", Commands::createDot);
     f_->regist3r("emit", Commands::createEmit);
+
+    f_->regist3r("cr", Commands::createCr);
+
 }
 
 bool Repl::isValid(std::string word)
