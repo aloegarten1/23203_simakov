@@ -18,10 +18,10 @@ namespace frt
 
         virtual bool exec(ExecutionContext &context)
         {
+            context.defineWord(commandName, commandExpr);
             return true;
         }
 
-    
         std::string commandName;
         std::shared_ptr<Expression> commandExpr;
     }; // class Value

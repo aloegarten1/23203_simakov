@@ -21,21 +21,12 @@ void Repl::run()
         {
             std::shared_ptr<frt::Expression> exprP;
 
-            if (!readExpression(exprP))
+            if (!readExpressionList(exprP))
             {
                 break;
             }
 
-            if (typeid(exprP.get()) == typeid(frt::Declaration))
-            {
-                frt::Declaration *decl = (frt::Declaration *)exprP.get();
-                forth_.defineWord(decl->commandName, decl->commandExpr);
-            }
-            else
-            {
-
-                forth_.execToken(exprP.get());
-            }
+            forth_.execToken(exprP.get());
         }
         catch (const std::exception &e)
         {
@@ -45,7 +36,87 @@ void Repl::run()
     }
 }
 
-bool Repl::readExpression(std::shared_ptr<frt::Expression> &expr)
+bool Repl::readExpressionList(std::shared_ptr<frt::Expression> &expr)
+{
+    std::vector<std::shared_ptr<frt::Token>> tokens;
+
+    while (true)
+    {
+        std::string word;
+        std::shared_ptr<frt::Token> t;
+
+        bool ok = scanner_.readWord(word);
+
+        if (!ok)
+        {
+            // end of input stream reached
+            if (tokens.size() > 0)
+            {
+                break;
+            }
+
+            return false;
+        }
+
+        if ("" == word)
+        {
+            continue;
+        }
+
+        if (isBasicToken(word, t))
+        {
+            tokens.push_back(t);
+            continue;
+        }
+
+        if (":" == word)
+        {
+
+            std::string name;
+
+            bool ok = scanner_.readWord(word);
+
+            if (!ok)
+            {
+                // end of input stream reached
+                if (tokens.size() > 0)
+                {
+                    break;
+                }
+
+                return false;
+            }
+
+            std::shared_ptr<frt::Expression> body;
+
+            if (!readExpressionDef(body))
+            {
+                // TODO - tests cover
+                return false;
+            }
+
+            t = std::make_shared<frt::Declaration>(name, body);
+            tokens.push_back(t);
+
+            continue;
+        }
+
+        if ("\n" == word)
+        {
+            if (interactive_ && tokens.size() > 0)
+            {
+                break;
+            }
+            continue;
+        }
+    }
+
+    expr = std::make_shared<frt::Expression>(tokens);
+
+    return true;
+}
+
+bool Repl::readExpressionDef(std::shared_ptr<frt::Expression> &expr)
 {
     std::vector<std::shared_ptr<frt::Token>> tokens;
 
@@ -83,42 +154,10 @@ bool Repl::readExpression(std::shared_ptr<frt::Expression> &expr)
             continue;
         }
 
-        if (":" == word)
-        {
-
-            std::string name;
-
-            bool ok = scanner_.readWord(word);
-
-            if (!ok)
-            {
-                // end of input stream reached
-                if (tokens.size() > 0)
-                {
-                    break;
-                }
-
-                return false;
-            }
-
-            std::shared_ptr<frt::Expression> body;
-
-            if (!readExpression(body))
-            {
-                // TODO - tests cover
-                return false;
-            }
-
-            t = std::make_shared<frt::Declaration>(name, body);
-            tokens.push_back(t);
-
-            continue;
-        }
-
         if ("if" == word)
         {
             std::shared_ptr<frt::Expression> body;
-            if (!readExpression(body))
+            if (!readExpressionIf(body))
             {
                 return false;
             }
@@ -128,8 +167,64 @@ bool Repl::readExpression(std::shared_ptr<frt::Expression> &expr)
             continue;
         }
 
-        if ("then" == word)
+        if ("do" == word)
         {
+
+            std::shared_ptr<frt::Expression> body;
+            if (!readExpressionDo(body))
+            {
+                return false;
+            }
+            // forth_.deleteVar(name);
+            t = std::make_shared<frt::DoLoop>(body);
+            tokens.push_back(t);
+
+            continue;
+        }
+
+        // glhf catching bugs caused by this
+        if ("i" == word)
+        {
+            t = std::make_shared<frt::DoLoopIterator>();
+            tokens.push_back(t);
+        }
+    }
+
+    expr = std::make_shared<frt::Expression>(tokens);
+
+    return true;
+}
+
+bool Repl::readExpressionIf(std::shared_ptr<frt::Expression> &expr)
+{
+    std::vector<std::shared_ptr<frt::Token>> tokens;
+
+    while (true)
+    {
+        std::string word;
+        std::shared_ptr<frt::Token> t;
+
+        bool ok = scanner_.readWord(word);
+
+        if (!ok)
+        {
+            // end of input stream reached
+            if (tokens.size() > 0)
+            {
+                break;
+            }
+
+            return false;
+        }
+
+        if ("" == word)
+        {
+            continue;
+        }
+
+        if (isBasicToken(word, t))
+        {
+            tokens.push_back(t);
             continue;
         }
 
@@ -137,20 +232,76 @@ bool Repl::readExpression(std::shared_ptr<frt::Expression> &expr)
         {
             t = std::make_shared<frt::IfElse>();
             tokens.push_back(t);
-
             continue;
+        }
+
+        if ("then" == word)
+        {
+            break;
         }
 
         if ("do" == word)
         {
 
             std::shared_ptr<frt::Expression> body;
-            if (!readExpression(body))
+            if (!readExpressionDo(body))
             {
                 return false;
             }
             // forth_.deleteVar(name);
             t = std::make_shared<frt::DoLoop>(body);
+            tokens.push_back(t);
+
+            continue;
+        }
+    }
+
+    expr = std::make_shared<frt::Expression>(tokens);
+
+    return true;
+}
+
+bool Repl::readExpressionDo(std::shared_ptr<frt::Expression> &expr)
+{
+    std::vector<std::shared_ptr<frt::Token>> tokens;
+
+    while (true)
+    {
+        std::string word;
+        std::shared_ptr<frt::Token> t;
+
+        bool ok = scanner_.readWord(word);
+
+        if (!ok)
+        {
+            // end of input stream reached
+            if (tokens.size() > 0)
+            {
+                break;
+            }
+
+            return false;
+        }
+
+        if ("" == word)
+        {
+            continue;
+        }
+
+        if (isBasicToken(word, t))
+        {
+            tokens.push_back(t);
+            continue;
+        }
+
+        if ("if" == word)
+        {
+            std::shared_ptr<frt::Expression> body;
+            if (!readExpressionIf(body))
+            {
+                return false;
+            }
+            t = std::make_shared<frt::IfThen>(body);
             tokens.push_back(t);
 
             continue;
@@ -162,13 +313,9 @@ bool Repl::readExpression(std::shared_ptr<frt::Expression> &expr)
             tokens.push_back(t);
         }
 
-        if ("\n" == word)
+        if ("loop" == word)
         {
-            if (interactive_ && tokens.size() > 0)
-            {
-                break;
-            }
-            continue;
+            break;
         }
     }
 

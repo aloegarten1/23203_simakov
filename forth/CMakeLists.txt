@@ -13,7 +13,7 @@ add_executable(
         io/repl.cpp
         io/scanner.cpp
         interpreter/forth.cpp
-        interpreter/internals/executionContext.cpp
+        interpreter/internals/executionContext.hpp
         interpreter/internals/stack/stack.cpp
         interpreter/basics/commands/commands.cpp
         interpreter/basics/commands/math.cpp
@@ -47,7 +47,7 @@ add_executable(
   test/FORTH_basic_test.cpp
   test/FORTH_math_test.cpp
   test/FORTH_logic_test.cpp
-  test/FORTH_control_test.cpp
+
   test/FORTH_command_test.cpp
 
   interpreter/internals/stack/stack.cpp

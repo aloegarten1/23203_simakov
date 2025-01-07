@@ -16,7 +16,7 @@ public:
         init(input);
     }
 
-    Repl(std::istream &input) : scanner_(Scanner(input)), output_(std::cout) 
+    Repl(std::istream &input) : scanner_(Scanner(input)), output_(std::cout), forth_(std::cout) 
     {
         init(input);
     }
@@ -37,7 +37,10 @@ private:
 
 private:
     
-    bool readExpression(std::shared_ptr<frt::Expression> &expr);
+    bool readExpressionList(std::shared_ptr<frt::Expression> &expr);
+    bool readExpressionDef(std::shared_ptr<frt::Expression> &expr);
+    bool readExpressionIf(std::shared_ptr<frt::Expression> &expr);
+    bool readExpressionDo(std::shared_ptr<frt::Expression> &expr);
 
     bool isValid(std::string word);
     bool isNumber(std::string word);

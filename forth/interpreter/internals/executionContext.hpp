@@ -1,6 +1,7 @@
 #pragma once
 
 #include "stack/stack.hpp"
+#include "../basics/expression.hpp"
 
 #include <iostream>
 #include <map>
@@ -32,6 +33,20 @@ public:
     void printChar(char c) { output_ << c; }
     void printValAsChar(StackValue val) { output_ << char(val); }
     void cr() { output_ << std::endl; }
+
+    void defineWord(std::string& name, std::shared_ptr<Expression> expr) {
+        words_.insert(
+            std::pair<std::string, std::shared_ptr<Expression>>({name, expr})
+        );
+    }
+
+    std::shared_ptr<Expression> getDefinition(std::string& name) {
+        return words_.find(name)->second;
+    } 
+
+    bool isWordDefined(std::string& name) {
+        return words_.count(name) != 0;
+    }
 
     bool isVarDefined(std::string& name) { 
         return vars_.count(name) != 0;
@@ -71,5 +86,6 @@ private:
     Stack stack_;
     std::ostream& output_;
     std::map<std::string, StackValue> vars_;
+    std::map<std::string, std::shared_ptr<Expression>> words_;
 }; // class ExectuionContext;
 } // namespace frt
