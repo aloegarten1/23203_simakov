@@ -22,3 +22,4 @@ loop
 
 ny25
 ny19
+ . cr  
