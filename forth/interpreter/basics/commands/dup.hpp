@@ -7,7 +7,7 @@
 namespace frt {
 class Dup : public Command {
 public:
-    Dup() : _depth(1) { }
+    Dup() : Command("dup"), _depth(1) { }
     ~Dup() override = default;
     bool exec(ExecutionContext& context) override;
 protected:

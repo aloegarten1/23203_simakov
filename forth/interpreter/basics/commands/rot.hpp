@@ -7,7 +7,7 @@
 namespace frt {
 class Rot : public Command {
 public:
-    Rot() : _depth(3) { }
+    Rot() : Command("rot"), _depth(3) { }
     ~Rot() override = default;
     bool exec(ExecutionContext& context) override;
 protected:

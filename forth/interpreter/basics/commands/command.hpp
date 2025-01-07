@@ -9,7 +9,7 @@ namespace frt {
 class Command : public Token
 {
 public:
-    Command() : _depth(0) {};
+    Command(std::string name) : Token(name), _depth(0) {};
     virtual ~Command() = default;
 
     virtual bool exec(ExecutionContext& context) = 0;

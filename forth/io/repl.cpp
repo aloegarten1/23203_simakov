@@ -8,14 +8,6 @@
 
 // #define DEBUG
 
-namespace
-{
-    std::map<std::string, std::string> limiters{
-        std::pair<std::string, std::string>({":", ";"}),
-        std::pair<std::string, std::string>({"if", "then"}),
-        std::pair<std::string, std::string>({"do", "loop"})};
-}
-
 namespace Commands
 {
     std::shared_ptr<frt::Command> createAdd();
@@ -41,13 +33,13 @@ namespace Commands
 
 }
 
-void Repl::init()
+void Repl::init(std::istream &input)
 {
     interactive_ = false;
 
     // test whether a file descriptor refers to a terminal
     // dirty hack: 0 - stdin
-    if (&input_ == &std::cin && isatty(0))
+    if (&input == &std::cin && isatty(0))
     {
         interactive_ = true;
     }
@@ -62,16 +54,26 @@ void Repl::run()
         output_ << "Welcome to FORTH REPL mode." << std::endl;
     }
 
-    std::shared_ptr<frt::Token> t;
-
     while (true)
     {
         try
         {
-            if (!readToken(t))
+            std::shared_ptr<frt::Expression> exprP;
+
+            if (!readExpression(exprP))
             {
-                output_.flush();
-                return;
+                break;
+            }
+
+            if (typeid(exprP.get()) == typeid(frt::Declaration))
+            {
+                frt::Declaration *decl = (frt::Declaration *)exprP.get();
+                forth_.defineWord(decl->commandName, decl->commandExpr);
+            }
+            else
+            {
+
+                forth_.execToken(exprP.get());
             }
         }
         catch (const std::exception &e)
@@ -82,158 +84,134 @@ void Repl::run()
     }
 }
 
-bool Repl::readToken(std::shared_ptr<frt::Token> &t)
+bool Repl::readExpression(std::shared_ptr<frt::Expression> &expr)
 {
-    std::string word;
-    t = nullptr;
+    std::vector<std::shared_ptr<frt::Token>> tokens;
 
-    bool ok = readWord(word);
-
-    if (!ok)
+    while (true)
     {
-        // end of input stream reached
-        return false;
-    }
+        std::string word;
+        std::shared_ptr<frt::Token> t;
 
-    if ("" == word)
-    {
-        return true;
-    }
-
-    if (!isValid(word))
-    {
-        throw ForthError("invalid word: " + word);
-    }
-
-    if (isBasicToken(word, t))
-    {
-        if (!forth_.execToken(t.get()))
-        {
-            throw ForthError("exec error: " + word);
-        }
-        return true;
-    }
-
-    if (":" == word)
-    {
-        std::string name;
-        bool ok = readWord(name);
+        bool ok = scanner_.readWord(word);
 
         if (!ok)
         {
             // end of input stream reached
+            if (tokens.size() > 0)
+            {
+                break;
+            }
+
             return false;
         }
 
-        if (!isValid(name) || isBasicToken(name, t))
-        {
-
-            throw ForthError("ERROR: Double definition of: " + name);
-        }
-
-        std::shared_ptr<frt::Expression> e;
-        bool res = readExpression(e, limiters[word]);
-        if (res)
-        {
-            forth_.defineWord(name, e);
-        }
-        return true;
-    }
-
-    throw ForthError("readToken error : " + word);
-}
-
-bool Repl::readExpression(std::shared_ptr<frt::Expression> &e, std::string stop)
-{
-    std::string word;
-    std::shared_ptr<frt::Token> t;
-    std::vector<std::shared_ptr<frt::Token>> expr_;
-
-    while (word != stop)
-    {
-        bool ok = readWord(word);
-        if (!ok)
-        {
-            // end of input stream reached
-            return false;
-        }
-
-        if (word == stop)
-        {
-            e = std::make_shared<frt::Expression>(expr_);
-            return true;
-        }
         if ("" == word)
         {
-            throw ForthError("readExpression error: empty word");
+            continue;
         }
-        if (!isValid(word))
+
+        if (";" == word)
         {
-            throw ForthError("readExpression error: invalid word " + word);
+            break;
         }
 
         if (isBasicToken(word, t))
         {
-            expr_.push_back(t);
+            tokens.push_back(t);
+            continue;
         }
 
         if (":" == word)
         {
+
             std::string name;
-            bool ok = readWord(name);
+
+            bool ok = scanner_.readWord(word);
+
             if (!ok)
             {
                 // end of input stream reached
+                if (tokens.size() > 0)
+                {
+                    break;
+                }
+
                 return false;
             }
 
-            if (!isValid(name) || isBasicToken(name, t))
-            {
+            std::shared_ptr<frt::Expression> body;
 
-                throw ForthError("readExpression error: Double definition of " + name);
-            }
-
-            std::shared_ptr<frt::Expression> e;
-            if (!readExpression(e, limiters[word]))
+            if (!readExpression(body))
             {
+                // TODO - tests cover
                 return false;
             }
-            forth_.defineWord(name, e);
+
+            t = std::make_shared<frt::Declaration>(name, body);
+            tokens.push_back(t);
+
+            continue;
         }
 
         if ("if" == word)
         {
             std::shared_ptr<frt::Expression> body;
-            if (!readExpression(body, limiters[word]))
+            if (!readExpression(body))
             {
                 return false;
             }
             t = std::make_shared<frt::IfThen>(body);
-            expr_.push_back(t);
+            tokens.push_back(t);
+
+            continue;
+        }
+
+        if ("then" == word)
+        {
+            continue;
+        }
+
+        if ("else" == word)
+        {
+            t = std::make_shared<frt::IfElse>();
+            tokens.push_back(t);
+
+            continue;
         }
 
         if ("do" == word)
         {
-            // std::string name = "i";
-            // forth_.addVar(name, 0);
+
             std::shared_ptr<frt::Expression> body;
-            if (!readExpression(body, limiters[word]))
+            if (!readExpression(body))
             {
                 return false;
             }
             // forth_.deleteVar(name);
             t = std::make_shared<frt::DoLoop>(body);
-            expr_.push_back(t);
+            tokens.push_back(t);
+
+            continue;
         }
 
         if ("i" == word)
         {
             t = std::make_shared<frt::DoLoopIterator>();
-            expr_.push_back(t);
+            tokens.push_back(t);
         }
 
-        word = "";
+        if ("\n" == word)
+        {
+            if (interactive_ && tokens.size() > 0)
+            {
+                break;
+            }
+            continue;
+        }
     }
+
+    expr = std::make_shared<frt::Expression>(tokens);
 
     return true;
 }
@@ -252,12 +230,13 @@ bool Repl::isBasicToken(std::string &word, std::shared_ptr<frt::Token> &t)
         return true;
     }
 
-    if (word.length() >2 && word[0] == '.' && word[1] == '"' && word[word.length()-1]=='"'){
+    // ."string output"
+    if (word.length() > 2 && word[0] == '.' && word[1] == '"' && word[word.length() - 1] == '"')
+    {
 
-        std::string val=word.substr(2,word.length()-3);
+        std::string val = word.substr(2, word.length() - 3);
         t = std::make_shared<frt::StringOutToken>(val);
         return true;
-
     }
 
     if (f_->isRegistered(word))
@@ -269,16 +248,6 @@ bool Repl::isBasicToken(std::string &word, std::shared_ptr<frt::Token> &t)
     if (forth_.isWordDefined(word))
     {
         t = forth_.getDefinition(word);
-        return true;
-    }
-
-    if (forth_.isVarDefined(word))
-    {
-#if defined (DEBUG)        
-        output_ << "VAR" << std::endl;
-#endif        
-        t = std::make_shared<frt::Var>(word);
-
         return true;
     }
 
@@ -344,94 +313,4 @@ bool Repl::isNumber(std::string word)
     }
 
     return true;
-}
-
-static bool contains(std::vector<char> &vec, char sym)
-{
-    for (auto elem : vec)
-    {
-        if (elem == sym)
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-bool Repl::readWord(std::string &dst)
-{
-    try
-    {
-
-        if (input_.eof())
-        {
-            return false;
-        }
-    }
-    catch (const std::exception &e)
-    {
-        output_ << e.what() << '\n';
-        return false;
-    }
-
-    char c;
-
-#if defined(DEBUG)
-    output_ << "readWord debug 1 \n";
-#endif
-
-    this->input_.get(c);
-
-#if defined(DEBUG)
-    output_ << "readWord debug 2 " << c << " \n";
-#endif
-
-    while (c <= ' ')
-    {
-        if (input_.eof())
-        {
-            return false;
-        }
-
-#if defined(DEBUG)
-        output_ << "readWord debug 3 \n";
-#endif
-        this->input_.get(c);
-
-#if defined(DEBUG)
-        output_ << "readWord debug 4 " << c << " \n";
-#endif
-    }
-
-    while (c > ' ')
-    {
-        if (input_.eof())
-        {
-            return true;
-        }
-        dst += c;
-
-#if defined(DEBUG)
-        output_ << "readWord debug 5 \n";
-#endif
-        this->input_.get(c);
-
-#if defined(DEBUG)
-        output_ << "readWord debug 6 " << c << " \n";
-#endif
-    }
-
-    return true;
-}
-
-char Repl::skipSeps(std::vector<char> seps)
-{
-    char c;
-    input_.get(c);
-    while (contains(seps, c))
-    {
-        input_.get(c);
-    }
-    return c;
 }

@@ -11,10 +11,10 @@ add_executable(
         forth 
         io/main.cpp
         io/repl.cpp
+        io/scanner.cpp
         interpreter/forth.cpp
         interpreter/internals/executionContext.cpp
         interpreter/internals/stack/stack.cpp
-        interpreter/basics/expression.cpp
         interpreter/basics/commands/commands.cpp
         interpreter/basics/commands/math.cpp
         interpreter/basics/commands/logic.cpp
@@ -48,16 +48,18 @@ add_executable(
   test/FORTH_math_test.cpp
   test/FORTH_logic_test.cpp
   test/FORTH_control_test.cpp
+  test/FORTH_command_test.cpp
+
   interpreter/internals/stack/stack.cpp
   interpreter/internals/stack/stack.hpp
   interpreter/forth.cpp
   interpreter/internals/executionContext.hpp
-  interpreter/basics/expression.cpp
   interpreter/basics/commands/commands.cpp
   interpreter/basics/commands/math.cpp
   interpreter/basics/commands/logic.cpp
   io/repl.cpp
-)
+  io/scanner.cpp
+  )
 
 target_link_libraries(
   forth_test GTest::gtest_main  

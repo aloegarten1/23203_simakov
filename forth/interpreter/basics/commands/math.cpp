@@ -7,7 +7,7 @@ bool Math::exec(ExecutionContext &context)
 {
     if (context.getStackDepth() < _depth)
     {
-        return false;
+        throw ForthError("not enougth values in stack for " + name_);
     }
 
     StackValue left, right, result;

@@ -14,7 +14,7 @@ TEST(FORTH_MATH, PLUS_BAD)
 TEST(FORTH_MATH, PLUS_BAD_ES)
 {
     std::string res = repl("55\n+\n");
-    EXPECT_EQ(res, "exec error: +\n");
+    EXPECT_EQ(res, "not enougth values in stack for +\n");
 }
 
 TEST(FORTH_MATH, PLUS_GOOD)
@@ -34,7 +34,7 @@ TEST(FORTH_MATH, MINUS_BAD)
 TEST(FORTH_MATH, MINUS_BAD_ES)
 {
     std::string res = repl("55\n-\n");
-    EXPECT_EQ(res, "exec error: -\n");
+    EXPECT_EQ(res, "not enougth values in stack for -\n");
 }
 
 TEST(FORTH_MATH, MINUS_GOOD_1)
@@ -69,7 +69,7 @@ TEST(FORTH_MATH, MULT_BAD)
 TEST(FORTH_MATH, MULT_BAD_ES)
 {
     std::string res = repl("55\n*\n");
-    EXPECT_EQ(res, "exec error: *\n");
+    EXPECT_EQ(res, "not enougth values in stack for *\n");
 }
 
 TEST(FORTH_MATH, MULT_GOOD)
@@ -87,7 +87,7 @@ TEST(FORTH_MATH, DIV_BAD)
 TEST(FORTH_MATH, DIV_BAD_ES)
 {
     std::string res = repl("55\n/\n");
-    EXPECT_EQ(res, "exec error: /\n");
+    EXPECT_EQ(res, "not enougth values in stack for /\n");
 }
 
 TEST(FORTH_MATH, DIV_GOOD_1)
@@ -129,7 +129,7 @@ TEST(FORTH_MATH, MOD_BAD)
 TEST(FORTH_MATH, MOD_BAD_ES)
 {
     std::string res = repl("55 mod");
-    EXPECT_EQ(res, "exec error: mod\n");
+    EXPECT_EQ(res, "not enougth values in stack for mod\n");
 }
 
 TEST(FORTH_MATH, MOD_GOOD)

@@ -9,7 +9,7 @@ namespace frt
     class DoLoop : public Token
     {
     public:
-        DoLoop(std::shared_ptr<Expression> e) : expr_(e) {}
+        DoLoop(std::shared_ptr<Expression> e) : Token("do loop"), expr_(e) {}
         virtual ~DoLoop() = default;
 
         virtual bool exec(ExecutionContext &context)
@@ -72,7 +72,7 @@ namespace frt
     class DoLoopIterator : public Token
     {
     public:
-        DoLoopIterator() = default;
+        DoLoopIterator() : Token("loop iterator") {};
         virtual ~DoLoopIterator() = default;
         virtual bool exec(ExecutionContext &context)
         {

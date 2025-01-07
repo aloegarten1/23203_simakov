@@ -14,5 +14,7 @@
 #include "commands/swap.hpp"
 #include "commands/cr.hpp"
 
+
 #include "doLoop.hpp"
 #include "ifThen.hpp"
+#include "decl.hpp"

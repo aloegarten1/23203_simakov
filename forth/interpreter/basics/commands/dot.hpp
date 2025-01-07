@@ -7,7 +7,7 @@
 namespace frt {
 class Dot : public Command {
 public:
-    Dot() : _depth(1) { }
+    Dot() :  Command(".") , _depth(1) { }
     ~Dot() override = default;
     bool exec(ExecutionContext& context) override;
 protected:

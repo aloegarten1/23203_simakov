@@ -10,7 +10,7 @@ namespace frt
     class Logic : public Command
     {
     public:
-        Logic() : _depth(2) {}
+        Logic(std::string name) : Command(name), _depth(2) {};
         ~Logic() override = default;
         bool exec(ExecutionContext &context) override;
 
@@ -22,7 +22,7 @@ namespace frt
     class Eq : public Logic
     {
     public:
-        using Logic::Logic;
+        Eq() : Logic("equal") {};
 
     protected:
         bool compare(StackValue left, StackValue right) override;
@@ -31,7 +31,8 @@ namespace frt
     class G : public Logic
     {
     public:
-        using Logic::Logic;
+          G() : Logic("greater than") {};
+
 
     protected:
         bool compare(StackValue left, StackValue right) override;
@@ -40,7 +41,8 @@ namespace frt
     class L : public Logic
     {
     public:
-        using Logic::Logic;
+        L() : Logic("less then") {};
+
 
     protected:
         bool compare(StackValue left, StackValue right) override;

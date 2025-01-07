@@ -2,6 +2,8 @@
 
 #include "../interpreter/forth.hpp"
 #include "../interpreter/basics/commands/command_factory.hpp"
+#include "scanner.hpp"
+
 
 #include <iostream>
 #include <string>
@@ -9,23 +11,23 @@
 class Repl
 {
 public:
-    Repl(std::istream &input, std::ostream &output) : input_(input), output_(output), forth_(output)
+    Repl(std::istream &input, std::ostream &output) : scanner_(Scanner(input)), output_(output), forth_(output)
     {
-        init();
+        init(input);
     }
 
-    Repl(std::istream &stream) : input_(stream), output_(std::cout) 
+    Repl(std::istream &input) : scanner_(Scanner(input)), output_(std::cout) 
     {
-        init();
+        init(input);
     }
 
     void run();
 
 private:
-
+    Scanner scanner_;
     bool interactive_;
 
-    std::istream &input_;
+
     std::ostream &output_;
     frt::Forth forth_;
     std::vector<char> seps = {' ', '\t', '\n'};
@@ -36,16 +38,14 @@ private:
 private:
     void loadCommands();
 
-    bool readWord(std::string &dst);
+    
     bool readToken(std::shared_ptr<frt::Token>& t);
-    bool readAndEvalToken();
-    bool readExpression(std::shared_ptr<frt::Expression>& e, std::string stop);
-    // bool readExpression(frt::Expression **e, std::string stop);
+    
+    bool readExpression(std::shared_ptr<frt::Expression> &expr);
 
-    char skipSeps(std::vector<char> seps);
     bool isValid(std::string word);
     bool isNumber(std::string word);
     bool isBasicToken(std::string &word, std::shared_ptr<frt::Token>& t);
-    void init();
+    void init(std::istream &input);
 
 };

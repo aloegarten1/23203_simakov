@@ -7,7 +7,7 @@ using namespace std;
 TEST(FORTH_LOGIC, GT_0)
 {
     std::string res = repl("1 >");
-    EXPECT_EQ(res, "exec error: >\n");
+    EXPECT_EQ(res, "not enougth values in stack for: greater than\n");
 }
 
 TEST(FORTH_LOGIC, GT_1)
@@ -50,13 +50,13 @@ TEST(FORTH_LOGIC, LT_3)
 TEST(FORTH_LOGIC, EQ_1)
 {
     std::string res = repl("=");
-    EXPECT_EQ(res, "exec error: =\n");
+    EXPECT_EQ(res, "not enougth values in stack for: equal\n");
 }
 
 TEST(FORTH_LOGIC, EQ_2)
 {
     std::string res = repl("1 =");
-    EXPECT_EQ(res, "exec error: =\n");
+    EXPECT_EQ(res, "not enougth values in stack for: equal\n");
 }
 
 TEST(FORTH_LOGIC, EQ_3)

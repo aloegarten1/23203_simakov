@@ -7,7 +7,7 @@
 namespace frt {
 class Swap : public Command {
 public:
-    Swap() : _depth(2) { }
+    Swap() : Command("swap"), _depth(2) { }
     ~Swap() override = default;
     bool exec(ExecutionContext& context) override;
 protected:

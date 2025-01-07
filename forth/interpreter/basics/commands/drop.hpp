@@ -5,7 +5,7 @@
 namespace frt {
 class Drop : public Command {
 public:
-    Drop() : _depth(1) {}
+    Drop() : Command("drop"), _depth(1) {}
     ~Drop() override = default;
     bool exec(ExecutionContext& context) override;
 protected:

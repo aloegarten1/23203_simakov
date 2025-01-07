@@ -7,7 +7,7 @@
 namespace frt {
 class Over : public Command {
 public:
-    Over() : _depth(2) { }
+    Over() : Command("over"), _depth(2) { }
     ~Over() override = default;
     bool exec(ExecutionContext& context) override;
 protected:

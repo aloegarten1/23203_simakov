@@ -10,7 +10,7 @@ namespace frt
     class Math : public Command
     {
     public:
-        Math() : _depth(2) {}
+        Math(std::string name) : Command(name), _depth(2) {}
         ~Math() override = default;
         bool exec(ExecutionContext &context) override;
 
@@ -22,7 +22,7 @@ namespace frt
     class Add : public Math
     {
     public:
-        using Math::Math;
+        Add() : Math("+") {}
 
     protected:
         StackValue calc(StackValue left, StackValue right) override;
@@ -31,7 +31,7 @@ namespace frt
     class Subtract : public Math
     {
     public:
-        using Math::Math;
+        Subtract() : Math("-") {};
 
     protected:
         StackValue calc(StackValue left, StackValue right) override;
@@ -40,7 +40,7 @@ namespace frt
     class Mult : public Math
     {
     public:
-        using Math::Math;
+        Mult() : Math("*") {}
 
     protected:
         StackValue calc(StackValue left, StackValue right) override;
@@ -49,7 +49,7 @@ namespace frt
     class Div : public Math
     {
     public:
-        using Math::Math;
+        Div() : Math("/") {}
 
     protected:
         StackValue calc(StackValue left, StackValue right) override;
@@ -58,7 +58,7 @@ namespace frt
     class Mod : public Math
     {
     public:
-        using Math::Math;
+        Mod() : Math("mod") {}
 
     protected:
         StackValue calc(StackValue left, StackValue right) override;
