@@ -82,6 +82,67 @@ void Repl::run()
     }
 }
 
+bool Repl::readToken(std::shared_ptr<frt::Token> &t)
+{
+    std::string word;
+    t = nullptr;
+
+    bool ok = readWord(word);
+
+    if (!ok)
+    {
+        // end of input stream reached
+        return false;
+    }
+
+    if ("" == word)
+    {
+        return true;
+    }
+
+    if (!isValid(word))
+    {
+        throw ForthError("invalid word: " + word);
+    }
+
+    if (isBasicToken(word, t))
+    {
+        if (!forth_.execToken(t.get()))
+        {
+            throw ForthError("exec error: " + word);
+        }
+        return true;
+    }
+
+    if (":" == word)
+    {
+        std::string name;
+        bool ok = readWord(name);
+
+        if (!ok)
+        {
+            // end of input stream reached
+            return false;
+        }
+
+        if (!isValid(name) || isBasicToken(name, t))
+        {
+
+            throw ForthError("ERROR: Double definition of: " + name);
+        }
+
+        std::shared_ptr<frt::Expression> e;
+        bool res = readExpression(e, limiters[word]);
+        if (res)
+        {
+            forth_.defineWord(name, e);
+        }
+        return true;
+    }
+
+    throw ForthError("readToken error : " + word);
+}
+
 bool Repl::readExpression(std::shared_ptr<frt::Expression> &e, std::string stop)
 {
     std::string word;
@@ -177,67 +238,6 @@ bool Repl::readExpression(std::shared_ptr<frt::Expression> &e, std::string stop)
     return true;
 }
 
-bool Repl::readToken(std::shared_ptr<frt::Token> &t)
-{
-    std::string word;
-    t = nullptr;
-
-    bool ok = readWord(word);
-
-    if (!ok)
-    {
-        // end of input stream reached
-        return false;
-    }
-
-    if ("" == word)
-    {
-        return true;
-    }
-
-    if (!isValid(word))
-    {
-        throw ForthError("invalid word: " + word);
-    }
-
-    if (isBasicToken(word, t))
-    {
-        if (!forth_.execToken(t.get()))
-        {
-            throw ForthError("exec error: " + word);
-        }
-        return true;
-    }
-
-    if (":" == word)
-    {
-        std::string name;
-        bool ok = readWord(name);
-
-        if (!ok)
-        {
-            // end of input stream reached
-            return false;
-        }
-
-        if (!isValid(name) || isBasicToken(name, t))
-        {
-
-            throw ForthError("ERROR: Double definition of: " + name);
-        }
-
-        std::shared_ptr<frt::Expression> e;
-        bool res = readExpression(e, limiters[word]);
-        if (res)
-        {
-            forth_.defineWord(name, e);
-        }
-        return true;
-    }
-
-    throw ForthError("undefined behavior ");
-}
-
 bool Repl::isBasicToken(std::string &word, std::shared_ptr<frt::Token> &t)
 {
 #if defined(DEBUG)
@@ -250,6 +250,14 @@ bool Repl::isBasicToken(std::string &word, std::shared_ptr<frt::Token> &t)
         t = std::make_shared<frt::ValueToken>(val);
 
         return true;
+    }
+
+    if (word.length() >2 && word[0] == '.' && word[1] == '"' && word[word.length()-1]=='"'){
+
+        std::string val=word.substr(2,word.length()-3);
+        t = std::make_shared<frt::StringOutToken>(val);
+        return true;
+
     }
 
     if (f_->isRegistered(word))
@@ -266,7 +274,9 @@ bool Repl::isBasicToken(std::string &word, std::shared_ptr<frt::Token> &t)
 
     if (forth_.isVarDefined(word))
     {
-        std::cout << "VAR" << std::endl;
+#if defined (DEBUG)        
+        output_ << "VAR" << std::endl;
+#endif        
         t = std::make_shared<frt::Var>(word);
 
         return true;
@@ -326,7 +336,7 @@ bool Repl::isNumber(std::string word)
         }
 
         // negative
-        if (i == 0 && word.length()>1 && word[i] == '-')
+        if (i == 0 && word.length() > 1 && word[i] == '-')
         {
             continue;
         }

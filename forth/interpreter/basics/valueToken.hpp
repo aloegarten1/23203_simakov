@@ -19,4 +19,23 @@ public:
 protected:
     StackValue val_;
 }; // class ValueToken
+
+
+class StringOutToken : public Token {
+public:
+
+    StringOutToken(std::string val) : val_(val) {}
+
+    virtual ~StringOutToken() = default;
+    
+    virtual bool exec(ExecutionContext& context) {
+        context.print(val_);
+        return true;
+    }
+protected:
+    std::string val_;
+}; // class ValueToken
+
+
+
 } // namespace frt
