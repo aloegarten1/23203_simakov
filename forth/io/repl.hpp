@@ -30,22 +30,19 @@ private:
 
     std::ostream &output_;
     frt::Forth forth_;
-    std::vector<char> seps = {' ', '\t', '\n'};
+
 
     using CommandFactory = frt::CommandFactory<frt::Command, std::string, std::shared_ptr<frt::Command>(*)()>;
     CommandFactory *f_ = CommandFactory::getInstance();
 
 private:
-    void loadCommands();
-
-    
-    bool readToken(std::shared_ptr<frt::Token>& t);
     
     bool readExpression(std::shared_ptr<frt::Expression> &expr);
 
     bool isValid(std::string word);
     bool isNumber(std::string word);
     bool isBasicToken(std::string &word, std::shared_ptr<frt::Token>& t);
+
     void init(std::istream &input);
 
 };

@@ -8,47 +8,8 @@
 
 // #define DEBUG
 
-namespace Commands
-{
-    std::shared_ptr<frt::Command> createAdd();
-    std::shared_ptr<frt::Command> createSubtract();
-    std::shared_ptr<frt::Command> createMult();
-    std::shared_ptr<frt::Command> createDiv();
-    std::shared_ptr<frt::Command> createMod();
-
-    std::shared_ptr<frt::Command> createG();
-    std::shared_ptr<frt::Command> createL();
-    std::shared_ptr<frt::Command> createEq();
-
-    std::shared_ptr<frt::Command> createDup();
-    std::shared_ptr<frt::Command> createDrop();
-    std::shared_ptr<frt::Command> createRot();
-    std::shared_ptr<frt::Command> createSwap();
-    std::shared_ptr<frt::Command> createOver();
-
-    std::shared_ptr<frt::Command> createDot();
-    std::shared_ptr<frt::Command> createEmit();
-
-    std::shared_ptr<frt::Command> createCr();
-
-}
-
-void Repl::init(std::istream &input)
-{
-    interactive_ = false;
-
-    // test whether a file descriptor refers to a terminal
-    // dirty hack: 0 - stdin
-    if (&input == &std::cin && isatty(0))
-    {
-        interactive_ = true;
-    }
-}
-
 void Repl::run()
 {
-    loadCommands();
-
     if (interactive_)
     {
         output_ << "Welcome to FORTH REPL mode." << std::endl;
@@ -254,30 +215,6 @@ bool Repl::isBasicToken(std::string &word, std::shared_ptr<frt::Token> &t)
     return false;
 }
 
-void Repl::loadCommands()
-{
-    f_->regist3r("+", Commands::createAdd);
-    f_->regist3r("-", Commands::createSubtract);
-    f_->regist3r("*", Commands::createMult);
-    f_->regist3r("/", Commands::createDiv);
-    f_->regist3r("mod", Commands::createMod);
-
-    f_->regist3r(">", Commands::createG);
-    f_->regist3r("<", Commands::createL);
-    f_->regist3r("=", Commands::createEq);
-
-    f_->regist3r("dup", Commands::createDup);
-    f_->regist3r("drop", Commands::createDrop);
-    f_->regist3r("swap", Commands::createSwap);
-    f_->regist3r("rot", Commands::createRot);
-    f_->regist3r("over", Commands::createOver);
-
-    f_->regist3r(".", Commands::createDot);
-    f_->regist3r("emit", Commands::createEmit);
-
-    f_->regist3r("cr", Commands::createCr);
-}
-
 bool Repl::isValid(std::string word)
 {
     for (std::size_t i = 0; i < word.length(); ++i)
@@ -313,4 +250,64 @@ bool Repl::isNumber(std::string word)
     }
 
     return true;
+}
+
+namespace Commands
+{
+    std::shared_ptr<frt::Command> createAdd();
+    std::shared_ptr<frt::Command> createSubtract();
+    std::shared_ptr<frt::Command> createMult();
+    std::shared_ptr<frt::Command> createDiv();
+    std::shared_ptr<frt::Command> createMod();
+
+    std::shared_ptr<frt::Command> createG();
+    std::shared_ptr<frt::Command> createL();
+    std::shared_ptr<frt::Command> createEq();
+
+    std::shared_ptr<frt::Command> createDup();
+    std::shared_ptr<frt::Command> createDrop();
+    std::shared_ptr<frt::Command> createRot();
+    std::shared_ptr<frt::Command> createSwap();
+    std::shared_ptr<frt::Command> createOver();
+
+    std::shared_ptr<frt::Command> createDot();
+    std::shared_ptr<frt::Command> createEmit();
+
+    std::shared_ptr<frt::Command> createCr();
+
+}
+
+void Repl::init(std::istream &input)
+{
+    interactive_ = false;
+
+    // test whether a file descriptor refers to a terminal
+    // dirty hack: 0 - stdin
+    if (&input == &std::cin && isatty(0))
+    {
+        interactive_ = true;
+    }
+
+    // loadCommands
+
+    f_->regist3r("+", Commands::createAdd);
+    f_->regist3r("-", Commands::createSubtract);
+    f_->regist3r("*", Commands::createMult);
+    f_->regist3r("/", Commands::createDiv);
+    f_->regist3r("mod", Commands::createMod);
+
+    f_->regist3r(">", Commands::createG);
+    f_->regist3r("<", Commands::createL);
+    f_->regist3r("=", Commands::createEq);
+
+    f_->regist3r("dup", Commands::createDup);
+    f_->regist3r("drop", Commands::createDrop);
+    f_->regist3r("swap", Commands::createSwap);
+    f_->regist3r("rot", Commands::createRot);
+    f_->regist3r("over", Commands::createOver);
+
+    f_->regist3r(".", Commands::createDot);
+    f_->regist3r("emit", Commands::createEmit);
+
+    f_->regist3r("cr", Commands::createCr);
 }
