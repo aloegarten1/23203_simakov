@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../internals/executionContext.hpp"
-
+#include "errors.hpp"
 namespace frt {
 
 class Token {

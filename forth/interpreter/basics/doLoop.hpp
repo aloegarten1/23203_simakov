@@ -18,7 +18,7 @@ namespace frt
 
             if (context.getStackDepth() < 2)
             {
-                return false;
+                throw ForthError("do loop error: not enought values in stack");
             }
             i = context.getTopVal();
             context.popVal();
